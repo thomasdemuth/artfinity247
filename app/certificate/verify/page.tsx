@@ -1,5 +1,6 @@
 // /certificate/verify?n=AF-XXXXXXXX-12 : public check that a certificate number is real.
 // Shows the piece, the artist and the print number. Nothing about the buyer.
+import { thumb } from "@/lib/img";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BadgeCheck, SearchX } from "lucide-react";
@@ -28,7 +29,7 @@ export default async function VerifyPage({ searchParams }: { searchParams: { n?:
           <section className="af-card grid gap-4 p-4 sm:grid-cols-[120px_minmax(0,1fr)] sm:p-5" aria-live="polite">
             {c.imageUrl && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={c.imageUrl} alt={c.title} className="h-auto w-[120px] rounded-[2px] shadow-[0_8px_18px_-8px_rgba(21,22,27,.45)]" />
+              <img src={thumb(c.imageUrl, 240)} alt={c.title} className="h-auto w-[120px] rounded-[2px] shadow-[0_8px_18px_-8px_rgba(21,22,27,.45)]" />
             )}
             <div className="grid content-start gap-1.5">
               <p className="flex items-center gap-1.5 text-[14px] font-bold text-earned">

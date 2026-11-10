@@ -2,6 +2,7 @@
 // One Place (/studio/places/[id]): its paintings and codes, and the bulk moves. Print all its codes, move everything
 // to another place, mark paintings as back home, and "This place closed / show ended" (pick what scans do; Undo for a
 // few seconds).
+import { thumb } from "@/lib/img";
 import { useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -194,7 +195,7 @@ export default function PlaceManager({ place, paintings, codes, choices, others,
             {paintings.map((p) => (
               <li key={p.id} className="grid content-start gap-1.5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.imageUrl} alt="" className="aspect-[4/5] w-full rounded-xl object-cover" />
+                <img src={thumb(p.imageUrl, 640)} alt="" className="aspect-[4/5] w-full rounded-xl object-cover" />
                 {p.slug ? <Link href={`/studio/art/${p.slug}`} className="truncate text-[15px] font-bold text-ink no-underline hover:underline">{p.title}</Link> : <b className="truncate text-[15px]">{p.title}</b>}
                 <span className="t-small">Since {p.since}</span>
                 <button type="button" className="btn btn-ghost btn-sm justify-self-start" onClick={() => { void home([p.id]); }} disabled={!!busy} aria-label={`${p.title} is back home`}>
@@ -234,7 +235,7 @@ export default function PlaceManager({ place, paintings, codes, choices, others,
                 <Link href={`/studio/codes/${c.code}`} className="flex items-center gap-3 rounded-xl px-1 py-1.5 text-ink no-underline hover:bg-wall/60">
                   {c.imageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={c.imageUrl} alt="" className="h-11 w-11 shrink-0 rounded-[3px] object-cover" />
+                    <img src={thumb(c.imageUrl, 88)} alt="" className="h-11 w-11 shrink-0 rounded-[3px] object-cover" />
                   ) : (
                     <span className="grid h-11 w-11 shrink-0 place-items-center rounded-[3px] bg-wall text-[12px] font-bold text-ink-2" aria-hidden="true">Page</span>
                   )}

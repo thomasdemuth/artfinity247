@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -139,7 +140,7 @@ export default function CodeEditor({ initial, arts, look, base, places = [], par
         {art && (
           <div className="t-small flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={art.imageUrl} alt={art.title} className="h-12 w-12 rounded-[3px] object-cover" />
+            <img src={thumb(art.imageUrl, 96)} alt={art.title} className="h-12 w-12 rounded-[3px] object-cover" />
             Scans land on {art.title}.
           </div>
         )}

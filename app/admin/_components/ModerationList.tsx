@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -57,7 +58,7 @@ function Comparison({ a, d }: { a: ModArtwork; d: DuplicateOf }) {
       <span className="text-[12px] font-bold uppercase tracking-[0.06em] text-ink-2">{label}</span>
       <div className="aspect-[4/5] overflow-hidden rounded-[4px] bg-gallery">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={x.imageUrl} alt={x.title} loading="lazy" className="h-full w-full object-contain" />
+        <img src={thumb(x.imageUrl, 640)} alt={x.title} loading="lazy" className="h-full w-full object-contain" />
       </div>
       <figcaption className="grid min-w-0 gap-0.5 text-[13px]">
         <b className="truncate text-[13.5px]">{x.title}</b>
@@ -313,7 +314,7 @@ export default function ModerationList({ artworks: initial, tab }: { artworks: M
           <li key={a.id} className="grid grid-cols-[104px_minmax(0,1fr)] gap-3 rounded-2xl border border-edge bg-white p-3 sm:grid-cols-1">
             <div className="relative aspect-[4/5] overflow-hidden rounded-[4px] bg-gallery">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={a.imageUrl} alt={a.title} loading="lazy" className="h-full w-full object-cover" />
+              <img src={thumb(a.imageUrl, 640)} alt={a.title} loading="lazy" className="h-full w-full object-cover" />
               <span className={cn("absolute left-2 top-2 rounded-full px-2 py-0.5 text-[12px] font-bold", st.cls)}>{st.label}</span>
               <label className="absolute right-1 top-1 grid h-9 w-9 cursor-pointer place-items-center rounded-full bg-white/90">
                 <input type="checkbox" checked={selected.has(a.id)} onChange={() => toggle(a.id)} aria-label={`Select ${a.title}`} className="h-4 w-4 accent-[var(--af-ink)]" />

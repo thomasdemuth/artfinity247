@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import { PRO, pct, proPrice } from "@/lib/plans";
 import StartInfinityButton from "./StartInfinityButton";
@@ -8,7 +9,7 @@ export default function VideoUpsell({ imageUrl, title }: { imageUrl: string; tit
     <div className="grid items-center gap-5 sm:grid-cols-[minmax(0,200px)_minmax(0,1fr)]">
       <div className="relative mx-auto aspect-[9/16] w-[150px] overflow-hidden rounded-2xl bg-ink sm:w-full" aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={imageUrl} alt="" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-70 blur-[2px]" />
+        <img src={thumb(imageUrl, 640)} alt="" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-70 blur-[2px]" />
         <span className="absolute inset-0 grid place-items-center">
           <span className="grid h-14 w-14 place-items-center rounded-full bg-white/90">
             <svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="#15161b" /></svg>

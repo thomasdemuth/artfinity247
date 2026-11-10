@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Lock } from "lucide-react";
@@ -185,7 +186,7 @@ export default function AutomationsPanel({ pro, storageKey, recent, server: init
             {recent.map((r) => (
               <li key={r.slug} className="flex items-center gap-3 p-3 sm:px-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={r.imageUrl} alt={r.title} className="h-12 w-12 shrink-0 rounded-[3px] object-cover" />
+                <img src={thumb(r.imageUrl, 96)} alt={r.title} className="h-12 w-12 shrink-0 rounded-[3px] object-cover" />
                 <span className="grid min-w-0 flex-1">
                   <b className="truncate text-[15px]">{r.title}</b>
                   <span className="t-small">

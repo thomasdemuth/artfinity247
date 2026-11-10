@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -87,7 +88,7 @@ export default function ShareKit({ arts, initialSlug, base, pro = true }: { arts
               )}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={a.imageUrl} alt="" loading="lazy" className="aspect-square w-full rounded-[3px] border-[3px] border-white object-cover shadow-[0_1px_4px_rgba(21,22,27,.25)]" />
+              <img src={thumb(a.imageUrl, 640)} alt="" loading="lazy" className="aspect-square w-full rounded-[3px] border-[3px] border-white object-cover shadow-[0_1px_4px_rgba(21,22,27,.25)]" />
               <span className="line-clamp-2 text-[13px] font-semibold leading-tight">{a.title}</span>
             </button>
           ))}

@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import ExportCsvButton from "./ExportCsvButton";
@@ -174,7 +175,7 @@ export default function Ledger({ ledger, adjustments = [], currentMonth }: { led
                     {/* phone: one compact card */}
                     <td className="grid grid-cols-[40px_minmax(0,1fr)_auto] gap-x-3 lg:hidden">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      {l.imageUrl ? <img src={l.imageUrl} alt="" className="row-span-3 h-10 w-10 rounded-[3px] object-cover" /> : <span className="row-span-3 block h-10 w-10 rounded-[3px] bg-gallery" />}
+                      {l.imageUrl ? <img src={thumb(l.imageUrl, 80)} alt="" className="row-span-3 h-10 w-10 rounded-[3px] object-cover" /> : <span className="row-span-3 block h-10 w-10 rounded-[3px] bg-gallery" />}
                       <b className="min-w-0 truncate font-semibold">{l.title}<RefundTag l={l} /></b>
                       <b className="text-right text-earned">+{usd(l.shareCents)}</b>
                       <span className="min-w-0 truncate text-[13px] text-ink-2">{SIZE_LABEL[l.size]}{l.quantity > 1 ? ` ×${l.quantity}` : ""} · {dayUTC(l.date)} · {buyer}</span>
@@ -185,7 +186,7 @@ export default function Ledger({ ledger, adjustments = [], currentMonth }: { led
                     <td className="hidden max-w-[240px] py-2.5 pr-3 lg:table-cell">
                       <span className="flex min-w-0 items-center gap-2.5">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        {l.imageUrl && <img src={l.imageUrl} alt="" className="h-8 w-8 shrink-0 rounded-[3px] object-cover" />}
+                        {l.imageUrl && <img src={thumb(l.imageUrl, 64)} alt="" className="h-8 w-8 shrink-0 rounded-[3px] object-cover" />}
                         <span className="min-w-0">
                           <b className="block truncate font-semibold">{l.title}<RefundTag l={l} /></b>
                           <span className="block text-[13px] text-ink-2">{SIZE_LABEL[l.size]}{l.framed ? ", framed" : ""}{l.quantity > 1 ? ` ×${l.quantity}` : ""}</span>

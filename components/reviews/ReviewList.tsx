@@ -1,5 +1,6 @@
 // Review cards: dabs, words, wall photo, "Verified buyer · Brooklyn · Oct 2026", and the artist's reply.
 // No hooks, so it renders in server or client components. Extra reviews fold into a <details>, no JS needed.
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { artPath } from "@/lib/urls";
@@ -30,7 +31,7 @@ function ReviewCard({ r, artistName, showArtwork }: { r: PublicReview; artistNam
         <a href={r.photoUrl} target="_blank" rel="noopener" className="block w-fit">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={r.photoUrl}
+            src={thumb(r.photoUrl, 384)}
             alt={`${r.buyerName}'s print${r.artwork ? ` of ${r.artwork.title}` : ""} on their wall`}
             loading="lazy"
             className="h-40 w-auto max-w-full rotate-[-1deg] rounded-[3px] border-4 border-white object-cover shadow-[0_8px_20px_-10px_rgba(21,22,27,.5)] sm:h-48"

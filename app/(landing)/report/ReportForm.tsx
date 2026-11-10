@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { FormEvent, ReactNode, useState } from "react";
 import { Check, Loader2 } from "lucide-react";
 import SensitiveImage from "@/components/site/SensitiveImage";
@@ -118,7 +119,7 @@ export default function ReportForm({ art, mode = "report" }: { art: ReportArt | 
           <div className="h-20 w-16 shrink-0 overflow-hidden rounded-[3px] bg-gallery">
             <SensitiveImage labels={art.sensitive} light>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={art.imageUrl} alt="" className="h-full w-full object-cover" />
+              <img src={thumb(art.imageUrl, 640)} alt="" className="h-full w-full object-cover" />
             </SensitiveImage>
           </div>
           <div className="grid min-w-0 gap-0.5">

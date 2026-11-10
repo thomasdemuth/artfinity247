@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -181,7 +182,7 @@ export default function BulkOrder({ arts, past, placedId, defaultName, tax = "ad
                       <span className="sr-only">Add </span>
                       <span className="relative grid aspect-square grid-cols-[minmax(0,1fr)] grid-rows-[minmax(0,1fr)] place-items-center overflow-hidden rounded-lg bg-gallery p-2">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={a.imageUrl} alt="" className="max-h-full max-w-full bg-white object-contain shadow-[0_6px_14px_-4px_rgba(21,22,27,.4)]" />
+                        <img src={thumb(a.imageUrl, 640)} alt="" className="max-h-full max-w-full bg-white object-contain shadow-[0_6px_14px_-4px_rgba(21,22,27,.4)]" />
                         <span className={cn("absolute right-1.5 top-1.5 grid h-7 min-w-7 place-items-center rounded-full px-1.5 text-[13px] font-bold", n ? "num bg-ink text-white" : "bg-white/90 text-ink opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100")}>
                           {n ? n : <Plus className="h-4 w-4" aria-hidden />}
                         </span>
@@ -212,7 +213,7 @@ export default function BulkOrder({ arts, past, placedId, defaultName, tax = "ad
                     <li key={l.key} className="af-panel grid gap-3 p-3 sm:grid-cols-[72px_minmax(0,1fr)] sm:p-4">
                       <div className="flex items-center gap-3 sm:row-span-2 sm:block">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={a.imageUrl} alt={a.title} className="h-16 w-14 shrink-0 rounded-[2px] bg-white object-cover shadow-[0_4px_10px_-3px_rgba(21,22,27,.35)] sm:h-[88px] sm:w-[72px]" />
+                        <img src={thumb(a.imageUrl, 176)} alt={a.title} className="h-16 w-14 shrink-0 rounded-[2px] bg-white object-cover shadow-[0_4px_10px_-3px_rgba(21,22,27,.35)] sm:h-[88px] sm:w-[72px]" />
                         <div className="min-w-0 flex-1 sm:hidden">
                           <b className="block truncate">{a.title}</b>
                           {a.edition && <span className="num text-[13px] text-ink-2">{a.edition.left} of {a.edition.size} left</span>}
@@ -381,7 +382,7 @@ export default function BulkOrder({ arts, past, placedId, defaultName, tax = "ad
                   {o.items.map((i) => (
                     <li key={i.id} className="flex items-center gap-2.5 text-[14px]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      {i.imageUrl && <img src={i.imageUrl} alt="" className="h-9 w-8 shrink-0 rounded-[2px] object-cover" />}
+                      {i.imageUrl && <img src={thumb(i.imageUrl, 72)} alt="" className="h-9 w-8 shrink-0 rounded-[2px] object-cover" />}
                       <span className="min-w-0 flex-1 leading-tight">
                         <span className="block truncate font-semibold">{i.title}</span>
                         <span className="num text-[13px] text-ink-2">

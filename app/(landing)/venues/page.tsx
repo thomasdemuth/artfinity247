@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageHead, { EmptyCanvas } from "@/components/browse/PageHead";
@@ -53,7 +54,7 @@ export default async function VenuesIndex({ searchParams }: { searchParams?: Rec
                         {Array.from({ length: 4 }, (_, i) => v.thumbs[i]).map((t, i) =>
                           t ? (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img key={i} src={t.imageUrl} alt="" loading="lazy" className={`aspect-square w-full rounded-[3px] bg-wall object-cover ${t.sensitive.length ? "blur-md" : ""}`} />
+                            <img key={i} src={thumb(t.imageUrl, 640)} alt="" loading="lazy" className={`aspect-square w-full rounded-[3px] bg-wall object-cover ${t.sensitive.length ? "blur-md" : ""}`} />
                           ) : (
                             <span key={i} className="aspect-square w-full rounded-[3px] bg-wall" />
                           ),

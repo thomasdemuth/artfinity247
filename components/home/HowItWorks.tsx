@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import { ReactNode } from "react";
 import { ImageUp } from "lucide-react";
 import QRCode from "@/components/af/QRCode";
@@ -57,7 +58,7 @@ export default function HowItWorks({ art, perPrint, smallPerPrint, monthBefore }
             <div className="relative">
               <div className="relative h-[136px] w-[110px] rotate-[-3deg] overflow-hidden border-[5px] border-white bg-white shadow-[0_10px_20px_-6px_rgba(21,22,27,.35)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={art.imageUrl} alt="" className="h-full w-full object-cover" loading="lazy" />
+                <img src={thumb(art.imageUrl, 640)} alt="" className="h-full w-full object-cover" loading="lazy" />
                 <div className={cn(s.cover, "absolute inset-0 grid place-items-center content-center gap-2 border-2 border-dashed border-ink/25 bg-paper")}>
                   <ImageUp className="h-7 w-7 text-scan" strokeWidth={1.8} />
                   <div className="h-1.5 w-[64px] overflow-hidden rounded-full bg-line">

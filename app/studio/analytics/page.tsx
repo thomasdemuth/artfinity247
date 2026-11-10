@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import { StudioPage } from "@/components/studio/StudioPage";
 import { EmptyState } from "@/components/studio/EmptyState";
@@ -217,7 +218,7 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: { 
                       <td className="w-full max-w-0 py-2 pr-2">
                         <span className="flex min-w-0 items-center gap-2.5">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          {w.imageUrl && <img src={w.imageUrl} alt="" className="h-8 w-8 shrink-0 rounded-[3px] object-cover sm:h-10 sm:w-10" />}
+                          {w.imageUrl && <img src={thumb(w.imageUrl, 80)} alt="" className="h-8 w-8 shrink-0 rounded-[3px] object-cover sm:h-10 sm:w-10" />}
                           {w.slug ? (
                             <Link href={`/studio/art/${w.slug}`} className="truncate font-semibold text-ink underline-offset-2 hover:underline">{w.title}</Link>
                           ) : (

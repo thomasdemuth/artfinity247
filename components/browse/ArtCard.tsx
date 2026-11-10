@@ -2,6 +2,7 @@ import Link from "next/link";
 import SensitiveImage from "@/components/site/SensitiveImage";
 import { money } from "@/lib/earnings";
 import { cn } from "@/lib/utils";
+import { thumbSet } from "@/lib/img";
 import { artistPath, artPath } from "@/lib/urls";
 import type { CardArt } from "./data";
 import { InlineBadges } from "@/components/artist/TrustBlock";
@@ -18,7 +19,7 @@ export function HungArt({ src, alt, sensitive, priority = false }: { src: string
     <div className="grid h-full w-full place-items-center">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={src}
+        {...thumbSet(src, 384)}
         alt={alt}
         loading={priority ? "eager" : "lazy"}
         decoding="async"

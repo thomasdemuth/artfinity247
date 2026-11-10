@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { useState } from "react";
 import Link from "next/link";
 import { artistPath, artPath } from "@/lib/urls";
@@ -116,7 +117,7 @@ export default function ReviewsAdmin({ reviews: initial, tab = "all" }: { review
             {r.photoUrl && (
               <a href={r.photoUrl} target="_blank" rel="noopener" className="block w-fit">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={r.photoUrl} alt="Buyer's photo" className="h-28 w-auto rounded-[3px] object-cover" />
+                <img src={thumb(r.photoUrl, 224)} alt="Buyer's photo" className="h-28 w-auto rounded-[3px] object-cover" />
               </a>
             )}
             {r.artistReply && <p className="rounded-lg bg-wall px-3 py-2 text-[13.5px]"><b>Reply:</b> {r.artistReply}</p>}

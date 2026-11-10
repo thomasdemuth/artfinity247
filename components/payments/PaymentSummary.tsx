@@ -2,6 +2,7 @@
 // Pay button (children). Used by buyer checkout, printed codes, bulk prints, painting scans and the Infinity plan.
 // No hooks, so it renders on the server or inside a client component. Put a <PayButton> (or StartInfinityButton,
 // ScanPayButton) in `children`; notes go under it.
+import { thumb } from "@/lib/img";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { money } from "./money";
@@ -72,7 +73,7 @@ export default function PaymentSummary({
             <li key={l.key} className="flex items-center gap-3 py-2.5 first:pt-0">
               {l.imageUrl && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={l.imageUrl} alt="" className="h-14 w-11 shrink-0 rounded-[2px] bg-wall object-cover shadow-[0_4px_10px_-4px_rgba(21,22,27,.4)]" />
+                <img src={thumb(l.imageUrl, 112)} alt="" className="h-14 w-11 shrink-0 rounded-[2px] bg-wall object-cover shadow-[0_4px_10px_-4px_rgba(21,22,27,.4)]" />
               )}
               <div className="min-w-0 flex-1 leading-tight">
                 <b className="block truncate text-[15px]">{l.title}</b>

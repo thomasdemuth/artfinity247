@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { FRAME_COLORS, FrameColor, PrintSize, SIZE_IN } from "@/components/art/pricing";
 import { cn } from "@/lib/utils";
 
@@ -60,7 +61,7 @@ export default function WallPreview({
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={imageUrl} alt="" className={cn("block h-full w-full object-cover", blur && "blur-[3px]")} />
+        <img src={thumb(imageUrl, 640)} alt="" className={cn("block h-full w-full object-cover", blur && "blur-[3px]")} />
       </div>
       {/* sofa */}
       <svg

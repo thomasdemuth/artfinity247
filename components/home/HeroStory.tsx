@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import { Check } from "lucide-react";
 import QRCode from "@/components/af/QRCode";
@@ -29,7 +30,7 @@ export default function HeroStory({ art, perPrint, price, monthBefore }: { art: 
   const painting = (
     <SensitiveImage labels={art.sensitive} light>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={art.imageUrl} alt="" className="h-full w-full object-cover" fetchPriority="high" />
+      <img src={thumb(art.imageUrl, 640)} alt="" className="h-full w-full object-cover" fetchPriority="high" />
     </SensitiveImage>
   );
 

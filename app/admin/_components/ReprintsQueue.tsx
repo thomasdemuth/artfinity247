@@ -2,6 +2,7 @@
 
 // Admin queue for buyer reprint requests (lib/reprints.ts). One card per request: order, prints, reason, photos, note,
 // and the three outcomes. Every outcome emails the buyer.
+import { thumb } from "@/lib/img";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -85,7 +86,7 @@ function Card({ r }: { r: AdminReprint }) {
           {r.items.map((i) => (
             <li key={i.id} className="flex items-center gap-3 rounded-xl border border-edge bg-wall/50 p-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              {i.imageUrl ? <img src={i.imageUrl} alt="" className="h-[60px] w-[48px] shrink-0 rounded-[2px] object-cover shadow-[0_4px_10px_-6px_rgba(21,22,27,.5)]" /> : <span className="h-[60px] w-[48px] shrink-0 rounded-[2px] bg-gallery" />}
+              {i.imageUrl ? <img src={thumb(i.imageUrl, 120)} alt="" className="h-[60px] w-[48px] shrink-0 rounded-[2px] object-cover shadow-[0_4px_10px_-6px_rgba(21,22,27,.5)]" /> : <span className="h-[60px] w-[48px] shrink-0 rounded-[2px] bg-gallery" />}
               <div className="min-w-0 text-[14px] leading-tight">
                 <b className="block truncate">{i.title}{i.of > 1 ? <span className="num font-normal text-ink-2"> · {i.qty} of {i.of}</span> : null}</b>
                 <span className="block truncate text-[13px] text-ink-2">{i.detail}</span>

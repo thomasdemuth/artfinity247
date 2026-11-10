@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -186,7 +187,7 @@ export default async function AdminOrderPage({ params }: { params: { id: string 
               {items.map(({ it, b, refund, artistShare, edition, cert, artist }) => (
                 <li key={it.id} className="grid grid-cols-[56px_minmax(0,1fr)] gap-3 py-3 sm:grid-cols-[56px_minmax(0,1fr)_auto]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  {it.imageUrl ? <img src={it.imageUrl} alt="" className="h-[70px] w-[56px] rounded-[3px] object-cover" /> : <span className="h-[70px] w-[56px] rounded-[3px] bg-gallery" />}
+                  {it.imageUrl ? <img src={thumb(it.imageUrl, 140)} alt="" className="h-[70px] w-[56px] rounded-[3px] object-cover" /> : <span className="h-[70px] w-[56px] rounded-[3px] bg-gallery" />}
                   <div className="min-w-0 text-[14px]">
                     <b className="block truncate">{it.title || it.artwork?.title || "Untitled"}</b>
                     <span className="block text-[13px] text-ink-2">

@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import type { Metadata } from "next";
 import { previewImage, sharePreview } from "@/lib/og";
 import Link from "next/link";
@@ -78,7 +79,7 @@ function Hung({ w, i, edition, handle }: { w: PublicWork; i: number; edition: Ed
             <div className="mat">
               <SensitiveImage labels={w.sensitive}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={w.imageUrl} alt={w.title} loading={i < 4 ? "eager" : "lazy"} className="block h-auto max-h-[70vh] w-full object-contain" />
+                <img src={thumb(w.imageUrl, 1280)} alt={w.title} loading={i < 4 ? "eager" : "lazy"} className="block h-auto max-h-[70vh] w-full object-contain" />
               </SensitiveImage>
             </div>
           </div>
@@ -106,7 +107,7 @@ function Neighbor({ dir, artistSlug, c }: { dir: "prev" | "next"; artistSlug: st
         <span className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-lg bg-gallery p-1.5">
           <SensitiveImage labels={c.cover.sensitive}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={c.cover.imageUrl} alt="" className="h-full w-full bg-white object-contain" />
+            <img src={thumb(c.cover.imageUrl, 640)} alt="" className="h-full w-full bg-white object-contain" />
           </SensitiveImage>
         </span>
       )}

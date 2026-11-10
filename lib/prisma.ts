@@ -10,7 +10,8 @@ declare global {
 export const prisma =
   global.prisma ||
   new PrismaClient({
-    log: ["query", "error", "warn"],
+    // Printing every query is useful while developing, but it slows each request down in production.
+    log: process.env.NODE_ENV === "production" || process.env.PRISMA_LOG_QUERIES === "0" ? ["error", "warn"] : ["query", "error", "warn"],
   });
 
 if (process.env.NODE_ENV !== "production") global.prisma = prisma;

@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -123,7 +124,7 @@ export default function ReportsQueue({ rows: initial, tab }: { rows: ReportRow[]
                 <div className="grid grid-cols-[96px_minmax(0,1fr)] gap-3">
                   <a href={artPath(r.art.artistSlug, r.art.slug ?? "")} target="_blank" rel="noopener noreferrer" className="block aspect-[4/5] overflow-hidden rounded-[3px] bg-gallery">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={r.art.imageUrl} alt={r.art.title} className="h-full w-full object-cover" loading="lazy" />
+                    <img src={thumb(r.art.imageUrl, 640)} alt={r.art.title} className="h-full w-full object-cover" loading="lazy" />
                   </a>
                   <div className="grid min-w-0 content-start gap-1">
                     <a href={artPath(r.art.artistSlug, r.art.slug ?? "")} target="_blank" rel="noopener noreferrer" className="inline-flex min-w-0 items-center gap-1 text-[18px] font-bold text-ink hover:text-scan">

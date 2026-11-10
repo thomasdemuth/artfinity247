@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import Image from "next/image";
 import Link from "next/link";
 import SensitiveImage from "@/components/site/SensitiveImage";
@@ -85,7 +86,7 @@ export function WorkSingle({ works, isOwner }: { works: ArtistWork[]; isOwner?: 
               <SensitiveImage labels={w.sensitive}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={w.imageUrl}
+                  src={thumb(w.imageUrl, 1280)}
                   alt={w.title}
                   loading={i < 2 ? "eager" : "lazy"}
                   className="mx-auto max-h-[72vh] w-auto max-w-full bg-white object-contain shadow-[0_1px_0_rgba(21,22,27,.08),0_22px_40px_-14px_rgba(21,22,27,.45)] transition-transform duration-500 group-hover:-translate-y-1"

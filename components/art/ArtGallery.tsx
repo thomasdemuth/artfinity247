@@ -109,6 +109,25 @@ export default function ArtGallery({
     else setTimeout(() => setIdle(true), 1200);
   }, []);
 
+  // Have the next picture ready before it's asked for: once the page has settled, the slide after the current one is
+  // mounted (and loads) off-stage, so swiping or clicking to it shows it at once instead of starting a download.
+  useEffect(() => {
+    if (!idle || n < 2) return;
+    const next = (cur + 1) % n;
+    setSeen((s) => (s.has(next) ? s : new Set([...s, next])));
+  }, [idle, cur, n]);
+
+  // A new size or frame changes every room picture. Only the one on stage (and the next) is drawn again now; the
+  // rest wait until they're looked at, rather than all re-rendering at once.
+  const opts = `${size}|${frame}`;
+  const lastOpts = useRef(opts);
+  useEffect(() => {
+    if (lastOpts.current === opts) return;
+    lastOpts.current = opts;
+    setSeen(new Set([0, cur, (cur + 1) % Math.max(1, n)]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [opts]);
+
   // keep the slide in place when the width changes; fewer slides (a reveal or blur change) clamps it
   useEffect(() => {
     const onResize = () => jump(cur, false);
@@ -216,7 +235,7 @@ export default function ArtGallery({
                     size={size}
                     frame={frame}
                     blur={blurred}
-                    eager={i === cur}
+                    eager
                     sizes="(min-width: 1024px) 680px, (min-width: 768px) 55vw, 100vw"
                     className="h-full"
                   />
@@ -331,8 +350,9 @@ function Thumb({ s, idle, thumbSrc, slug, imageUrl, aspect, size, frame, blurred
   if (s.kind === "detail") return <CloseUp src={thumbSrc} d={s.d} aspect={aspect} />;
   if (s.room.kind === "photo" && photoScenesOn)
     return (
+      // a 72px thumbnail: always the medium, unframed render, so picking a size or frame doesn't redraw every thumbnail
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={photoSrc(s.room.n, slug, size, frame, 480, { blur: blurred })} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+      <img src={photoSrc(s.room.n, slug, "medium", null, 480, { blur: blurred, image: imageUrl })} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
     );
   return idle ? <RoomScene scene={s.room.n} imageUrl={imageUrl} aspect={aspect} size={size} frame={frame} blur={blurred} className="h-full" /> : null;
 }

@@ -1,5 +1,6 @@
 // /collector — "Your collection": a signed-in buyer's orders (matched by their verified email), the artists they follow,
 // their wishlist and, when switched on, reward progress. Optional: buying never needs it (lib/collector.ts).
+import { thumb } from "@/lib/img";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
@@ -222,7 +223,7 @@ export default async function CollectorPage({ searchParams }: { searchParams: { 
                       return (
                         <li key={it.id} className="flex gap-3">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={a?.imageUrl || it.imageUrl || ""} alt="" className="h-[76px] w-[60px] shrink-0 rounded-[2px] bg-gallery object-cover shadow-[0_8px_16px_-10px_rgba(21,22,27,.6)]" />
+                          <img src={thumb(a?.imageUrl || it.imageUrl || "", 152)} alt="" className="h-[76px] w-[60px] shrink-0 rounded-[2px] bg-gallery object-cover shadow-[0_8px_16px_-10px_rgba(21,22,27,.6)]" />
                           <div className="min-w-0 leading-snug">
                             {href ? <Link href={href} className="block truncate font-bold text-ink no-underline hover:underline">{title}</Link> : <b className="block truncate">{title}</b>}
                             {artist && <span className="block text-[13.5px] text-ink-2">by {artist}</span>}
@@ -282,7 +283,7 @@ export default async function CollectorPage({ searchParams }: { searchParams: { 
                   <span className="relative block h-11 w-11 shrink-0 overflow-hidden rounded-full bg-wall">
                     {a.profileImage ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={a.profileImage} alt="" className="h-full w-full object-cover" />
+                      <img src={thumb(a.profileImage, 640)} alt="" className="h-full w-full object-cover" />
                     ) : (
                       <span className="grid h-full w-full place-items-center text-sm font-bold" aria-hidden>{name[0]}</span>
                     )}
@@ -314,7 +315,7 @@ export default async function CollectorPage({ searchParams }: { searchParams: { 
                 <li key={id} className="grid min-w-0 content-start gap-2">
                   <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-wall p-[10%]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={a.imageUrl} alt={a.title} loading="lazy" className={cn("mx-auto h-full w-full bg-white object-contain shadow-[0_12px_24px_-6px_rgba(21,22,27,.35)]", (!live || ed?.soldOut) && "opacity-60 grayscale-[40%]")} />
+                    <img src={thumb(a.imageUrl, 640)} alt={a.title} loading="lazy" className={cn("mx-auto h-full w-full bg-white object-contain shadow-[0_12px_24px_-6px_rgba(21,22,27,.35)]", (!live || ed?.soldOut) && "opacity-60 grayscale-[40%]")} />
                     {ed?.soldOut && <span className="absolute left-2 top-2 rounded-full bg-ink px-2 py-0.5 text-[12px] font-bold text-white">Sold out</span>}
                     {ed && !ed.soldOut && <span className="absolute left-2 top-2 rounded-full bg-sticker px-2 py-0.5 text-[12px] font-bold">{ed.left} of {ed.size} left</span>}
                   </div>

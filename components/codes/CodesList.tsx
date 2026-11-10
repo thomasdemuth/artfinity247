@@ -1,6 +1,7 @@
 "use client";
 // My codes (/studio/codes): every code, sortable and filterable (by Place, or labels out of date), with bulk select to
 // move codes to a Place, reprint them, or mark their old labels as replaced.
+import { thumb } from "@/lib/img";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -49,7 +50,7 @@ function sortRows(list: CodeListRow[], sort: SortKey) {
 function Thumb({ c }: { c: CodeListRow }) {
   return c.imageUrl ? (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={c.imageUrl} alt={c.artTitle || ""} className="h-14 w-14 shrink-0 rounded-[3px] object-cover shadow-[0_2px_0_var(--af-line)]" />
+    <img src={thumb(c.imageUrl, 112)} alt={c.artTitle || ""} className="h-14 w-14 shrink-0 rounded-[3px] object-cover shadow-[0_2px_0_var(--af-line)]" />
   ) : (
     <span className="grid h-14 w-14 shrink-0 place-items-center rounded-[3px] bg-wall text-center text-[12px] font-bold leading-tight text-ink-2 shadow-[0_2px_0_var(--af-line)]">Your<br />page</span>
   );

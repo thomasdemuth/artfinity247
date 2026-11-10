@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { DragEvent, FormEvent, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { collectionPath } from "@/lib/urls";
@@ -184,7 +185,7 @@ export default function CollectionsManager({ artistSlug, initial, arts }: { arti
                   <button type="button" onClick={() => pick(c.id)} aria-current={on ? "true" : undefined} className="flex min-w-0 flex-1 items-center gap-2.5 rounded-lg text-left focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-scan">
                     <span className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-md bg-gallery p-1">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      {cover ? <img src={cover.imageUrl} alt="" className="max-h-full max-w-full bg-white object-contain" /> : <i className="paint-dab h-5 w-5" style={{ ["--dab" as string]: "var(--af-sticker)" }} />}
+                      {cover ? <img src={thumb(cover.imageUrl, 640)} alt="" className="max-h-full max-w-full bg-white object-contain" /> : <i className="paint-dab h-5 w-5" style={{ ["--dab" as string]: "var(--af-sticker)" }} />}
                     </span>
                     <span className="min-w-0 leading-tight">
                       <b className="block truncate text-[15px]">{c.title}</b>
@@ -284,7 +285,7 @@ export default function CollectionsManager({ artistSlug, initial, arts }: { arti
                         >
                           <span className="grid aspect-square place-items-center overflow-hidden rounded-md bg-gallery p-1.5">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={a.imageUrl} alt="" className="max-h-full max-w-full bg-white object-contain" />
+                            <img src={thumb(a.imageUrl, 640)} alt="" className="max-h-full max-w-full bg-white object-contain" />
                           </span>
                           <span className="truncate px-0.5 text-[13px] font-semibold">{a.title}</span>
                           <span className={cn("absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full border-2 text-[12px] font-bold", inIt ? "border-white bg-sticker text-ink" : "border-ink/30 bg-white/90")}>
@@ -323,7 +324,7 @@ export default function CollectionsManager({ artistSlug, initial, arts }: { arti
                     >
                       <div className="relative grid aspect-[4/5] place-items-center overflow-hidden rounded-lg bg-gallery bg-[radial-gradient(ellipse_at_50%_0%,#f7f5f0_0%,#e9e6df_75%)] p-[12%]">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={a.imageUrl} alt={a.title} draggable={false} className="max-h-full max-w-full bg-white object-contain shadow-[0_10px_20px_-8px_rgba(21,22,27,.45)]" />
+                        <img src={thumb(a.imageUrl, 640)} alt={a.title} draggable={false} className="max-h-full max-w-full bg-white object-contain shadow-[0_10px_20px_-8px_rgba(21,22,27,.45)]" />
                         <span className="num absolute left-2 top-2 grid h-7 w-7 place-items-center rounded-full bg-white text-[13px] font-bold shadow-sm">{i + 1}</span>
                         {isCover && <span className="sticker-badge absolute bottom-2 left-2 text-[12px]">Cover</span>}
                         <button type="button" onClick={() => takeOut(active, id, a.title)} className="absolute right-1.5 top-1.5 grid h-8 w-8 place-items-center rounded-full bg-white/90 text-ink-2 shadow-sm hover:text-coral" aria-label={`Take ${a.title} out`}>

@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Check, ChevronDown, Minus } from "lucide-react";
@@ -82,7 +83,7 @@ export default async function PricingPage() {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={a.slug}
-                src={a.imageUrl}
+                src={thumb(a.imageUrl, 640)}
                 alt=""
                 className={`rounded-[3px] border-[6px] border-white object-cover shadow-[0_6px_18px_rgba(21,22,27,.22)] ${["h-40 w-32 -rotate-2", "h-56 w-40", "h-44 w-36 rotate-2"][i]}`}
               />

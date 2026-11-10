@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -236,7 +237,7 @@ export default function ArtGrid({ items, handle, places = [], partners = [] }: {
                     <Link href={`/studio/art/${a.slug}`} className="absolute inset-0 z-[1] rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-scan" aria-label={`Edit ${a.title}`} title="Edit" />
                   )}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={a.imageUrl} alt="" className={cn("h-full w-full object-cover transition duration-300 group-hover:scale-[1.02] motion-reduce:transition-none", hidden && "opacity-50 grayscale", canPick && picked.has(a.slug) && "opacity-80")} />
+                  <img src={thumb(a.imageUrl, 640)} alt="" className={cn("h-full w-full object-cover transition duration-300 group-hover:scale-[1.02] motion-reduce:transition-none", hidden && "opacity-50 grayscale", canPick && picked.has(a.slug) && "opacity-80")} />
                   <div className="pointer-events-none absolute left-2 top-2 z-[2]"><StatusPill art={a} /></div>
                   {/* Quick actions: fade in on hover or keyboard focus. Touch screens get the row under the title instead. */}
                   {!hidden && !selecting && (

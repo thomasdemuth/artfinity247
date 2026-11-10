@@ -81,6 +81,12 @@ export async function saveUpload(
     new Promise((resolve, reject) =>
       cloudinary.uploader.upload_stream({ public_id: publicId, resource_type: "image", ...o }, (err, r) => (err ? reject(err) : resolve(r))).end(data),
     );
+  // The usual case: sharp made the preview, so the private original and the public preview go up side by side
+  // (the original is the slow one: up to 25 MB).
+  if (preview && opts.keepOriginal) {
+    const [, r] = await Promise.all([put(buf, { type: "authenticated" }), put(preview, { type: "upload", overwrite: true, format: "jpg" })]);
+    return { url: r.secure_url, width, height };
+  }
   // Cloudinary reads some files sharp can't (e.g. HEIC): keep the file privately, then build the preview from it.
   const privateCopy = opts.keepOriginal || !preview;
   if (privateCopy) {
@@ -202,6 +208,67 @@ export async function readOriginalImage(previewUrl: string): Promise<{ data: Buf
   }
   const pub = await readStoredImage(previewUrl).catch(() => null);
   return pub ? { data: pub, original: false } : null;
+}
+
+/** Upright width × height from image bytes (EXIF orientation applied), or null when sharp can't tell. */
+async function uprightDims(input: Buffer | string): Promise<{ width: number; height: number } | null> {
+  try {
+    const m = await sharp(input, { failOn: "none" }).metadata();
+    if (!m.width || !m.height) return null;
+    return (m.orientation || 0) >= 5 ? { width: m.height, height: m.width } : { width: m.width, height: m.height };
+  } catch {
+    return null;
+  }
+}
+
+/** The first `max` bytes of a URL's body (the rest is never downloaded). */
+async function readHead(url: string, max: number): Promise<Buffer | null> {
+  const ctl = new AbortController();
+  try {
+    const res = await fetch(url, { signal: ctl.signal, headers: { Range: `bytes=0-${max - 1}` } });
+    if (!res.ok || !res.body) return null;
+    const chunks: Buffer[] = [];
+    let n = 0;
+    const reader = res.body.getReader();
+    while (n < max) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(Buffer.from(value));
+      n += value.byteLength;
+    }
+    ctl.abort();
+    return Buffer.concat(chunks);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Full-resolution size behind a preview URL, without reading the whole file when it can be helped: the photo editor
+ * asks for this every time it opens, and an original can be 25 MB. Local originals: sharp reads the header from the
+ * file. Cloudinary originals: the first 512 KB is enough for the header of nearly every file; otherwise (and for
+ * anything else) it falls back to reading it all, like readOriginalImage.
+ */
+export async function originalImageSize(previewUrl: string): Promise<{ width: number; height: number; original: boolean } | null> {
+  const local = await localOriginal(previewUrl);
+  if (local) {
+    const d = await uprightDims(local);
+    return d ? { ...d, original: true } : null;
+  }
+  const id = cloudinaryOn() ? cloudPublicId(previewUrl) : null;
+  if (id) {
+    const cloudinary = await cloud();
+    const r: any = await cloudinary.api.resource(id, { type: "authenticated" }).catch(() => null);
+    if (r) {
+      const src = cloudinary.utils.private_download_url(id, r.format, { type: "authenticated", expires_at: Math.floor(Date.now() / 1000) + 300 } as any);
+      const head = await readHead(src, 512 * 1024);
+      const d = head ? await uprightDims(head) : null;
+      if (d) return { ...d, original: true };
+    }
+  }
+  const img = await readOriginalImage(previewUrl);
+  const d = img ? await uprightDims(img.data) : null;
+  return d && img ? { ...d, original: img.original } : null;
 }
 
 /** Whether a preview URL is in this artist's own upload folder (lib/uploadPipeline.ts artistUploadTarget). */

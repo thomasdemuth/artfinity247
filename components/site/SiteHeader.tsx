@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -58,7 +59,7 @@ function ArtistBand({ brand }: { brand: HeaderBrand }) {
           <span className="relative block h-8 w-8 shrink-0 overflow-hidden rounded-full bg-gallery shadow-[0_0_0_2px_#fff] md:h-9 md:w-9">
             {brand.avatar ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={brand.avatar} alt="" className="h-full w-full object-cover" />
+              <img src={thumb(brand.avatar, 640)} alt="" className="h-full w-full object-cover" />
             ) : (
               <span className="grid h-full w-full place-items-center font-display text-[13px] font-extrabold text-ink" style={{ background: DABS[(brand.name.charCodeAt(0) || 0) % DABS.length] }} aria-hidden>
                 {initials}

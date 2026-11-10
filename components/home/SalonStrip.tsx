@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import Marquee from "@/components/motion/Marquee";
 import { money } from "@/lib/earnings";
@@ -28,7 +29,7 @@ export default function SalonStrip({ art, seconds = 70, reverse = false, label =
               <span className={cn("block bg-white p-[6px] shadow-[0_2px_0_rgba(21,22,27,.06),0_16px_26px_-12px_rgba(21,22,27,.5)] transition duration-500 group-hover:-translate-y-1.5 group-focus-visible:-translate-y-1.5", TILT[i % TILT.length])}>
                 <span className="block aspect-[4/5] overflow-hidden bg-wall">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={a.imageUrl} alt={a.title} className="h-full w-full object-cover" loading="lazy" decoding="async" />
+                  <img src={thumb(a.imageUrl, 640)} alt={a.title} className="h-full w-full object-cover" loading="lazy" decoding="async" />
                 </span>
               </span>
               <span className="grid gap-0.5 px-0.5">

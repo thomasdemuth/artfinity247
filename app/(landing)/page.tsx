@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -156,7 +157,7 @@ export default async function Home({ searchParams }: { searchParams?: Record<str
                   <div className="flex min-w-0 items-center gap-2.5">
                     {a.avatar ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={a.avatar} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" loading="lazy" />
+                      <img src={thumb(a.avatar, 72)} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" loading="lazy" />
                     ) : (
                       <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink font-display text-[15px] font-bold text-white">{a.name[0]}</span>
                     )}

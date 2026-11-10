@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import { StudioPage } from "@/components/studio/StudioPage";
 import { EmptyState } from "@/components/studio/EmptyState";
@@ -134,7 +135,7 @@ export default async function SalesPage({ searchParams }: { searchParams: { when
           {/* The newest sale, next to the money */}
           <section aria-labelledby="latest-h" className="af-card grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 p-4 sm:grid-cols-[80px_minmax(0,1fr)_auto] sm:p-5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            {latest.imageUrl ? <img src={latest.imageUrl} alt="" className="h-20 w-16 rounded-[3px] object-cover sm:h-[100px] sm:w-20" /> : <span className="h-20 w-16 rounded-[3px] bg-wall sm:h-[100px] sm:w-20" />}
+            {latest.imageUrl ? <img src={thumb(latest.imageUrl, 200)} alt="" className="h-20 w-16 rounded-[3px] object-cover sm:h-[100px] sm:w-20" /> : <span className="h-20 w-16 rounded-[3px] bg-wall sm:h-[100px] sm:w-20" />}
             <div className="min-w-0">
               <h2 id="latest-h" className="eyebrow">Latest sale · {whenSold(latest.date)}</h2>
               <b className="t-card mt-1 block truncate">{latest.title}</b>
@@ -204,12 +205,12 @@ export default async function SalesPage({ searchParams }: { searchParams: { when
                     <td className="hidden whitespace-nowrap py-2.5 pr-3 text-ink-2 sm:table-cell">{shortDate(s.date)}</td>
                     <td className="row-span-2 sm:hidden">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      {s.imageUrl && <img src={s.imageUrl} alt="" className="h-11 w-11 rounded-[3px] object-cover" />}
+                      {s.imageUrl && <img src={thumb(s.imageUrl, 88)} alt="" className="h-11 w-11 rounded-[3px] object-cover" />}
                     </td>
                     <td className="min-w-0 sm:py-2.5 sm:pr-3">
                       <span className="flex items-center gap-2.5">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        {s.imageUrl && <img src={s.imageUrl} alt="" className="hidden h-9 w-9 shrink-0 rounded-[3px] object-cover sm:block" />}
+                        {s.imageUrl && <img src={thumb(s.imageUrl, 72)} alt="" className="hidden h-9 w-9 shrink-0 rounded-[3px] object-cover sm:block" />}
                         <b className="truncate font-semibold">{s.title}</b>
                       </span>
                     </td>

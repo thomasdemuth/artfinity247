@@ -16,7 +16,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUserFromCookie } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rateLimit";
-import { deleteUpload, inArtistFolder, readOriginalImage } from "@/lib/storage";
+import { deleteUpload, inArtistFolder, originalImageSize, readOriginalImage } from "@/lib/storage";
 import { applyEdits, uprightSize } from "@/lib/imageEdits.server";
 import { isIdentity, parseEdits, type StoredEdits } from "@/lib/imageEdits";
 import { artistUploadTarget, processUpload } from "@/lib/uploadPipeline";
@@ -56,11 +56,10 @@ export async function GET(req: NextRequest) {
   if (!user?.id) return err("Log in to edit photos.", "not_logged_in", 401);
   const source = req.nextUrl.searchParams.get("source") || "";
   if (!source || !(await canUse(source, user))) return err("That photo isn't yours.", "not_your_art", 403);
-  const img = await readOriginalImage(source);
-  if (!img) return err("We couldn't find that photo. Upload it again.", "reupload", 404);
-  const { w, h } = await uprightSize(img.data).catch(() => ({ w: 0, h: 0 }));
-  if (!w) return err("We couldn't read that photo. Upload it again.", "unreadable_image", 415);
-  return NextResponse.json({ width: w, height: h, original: img.original }, { headers: { "Cache-Control": "private, no-store" } });
+  // only the size is needed here, so the (up to 25 MB) original isn't downloaded
+  const size = await originalImageSize(source);
+  if (!size) return err("We couldn't find that photo. Upload it again.", "reupload", 404);
+  return NextResponse.json(size, { headers: { "Cache-Control": "private, no-store" } });
 }
 
 export async function POST(req: NextRequest) {

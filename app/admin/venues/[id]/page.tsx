@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -184,7 +185,7 @@ export default async function AdminVenuePage({ params }: { params: { id: string 
                 <span className="flex items-center gap-3">
                   {c.artwork ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={c.artwork.imageUrl} alt="" className="h-11 w-11 shrink-0 rounded-[3px] object-cover" />
+                    <img src={thumb(c.artwork.imageUrl, 88)} alt="" className="h-11 w-11 shrink-0 rounded-[3px] object-cover" />
                   ) : (
                     <span className="grid h-11 w-11 shrink-0 place-items-center rounded-[3px] bg-wall text-[12px] font-bold leading-tight text-ink-2" aria-hidden="true">Page</span>
                   )}

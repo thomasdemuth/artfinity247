@@ -1,6 +1,7 @@
 "use client";
 // One painting in a scan booking (admin): upload its high-res scan onto the artwork, see the print sizes before and
 // after, or undo. POST/DELETE /api/admin/scanning/items/[itemId].
+import { thumb } from "@/lib/img";
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -82,7 +83,7 @@ export default function ScanFileRow({ item, canFile, options }: { item: ScanItem
     <li className={cn("grid gap-3 rounded-xl border p-3 sm:grid-cols-[72px_minmax(0,1fr)]", item.scanned ? "border-earned/40 bg-earned-soft/40" : "border-line")}>
       {item.imageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={item.imageUrl} alt="" className="h-[72px] w-[72px] rounded-[3px] bg-gallery object-cover" />
+        <img src={thumb(item.imageUrl, 144)} alt="" className="h-[72px] w-[72px] rounded-[3px] bg-gallery object-cover" />
       ) : (
         <span className="grid h-[72px] w-[72px] place-items-center rounded-[3px] bg-wall"><ImageOff className="h-5 w-5 text-ink-2" aria-hidden="true" /></span>
       )}

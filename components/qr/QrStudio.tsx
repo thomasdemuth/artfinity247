@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -629,7 +630,7 @@ function Wall({ art, svg, format }: { art: ArtInfo; svg: string; format: FormatK
     <div className={s.wall} role="img" aria-label={`To scale: ${art.title}, 24 by 30 inches, with the ${F.name.toLowerCase()} beside it`}>
       <div className={s.orig} style={{ left: "20%", top: "14%", width: `${pw}%`, height: `${ph}%` }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={art.imageUrl} alt="" />
+        <img src={thumb(art.imageUrl, 640)} alt="" />
       </div>
       <div className={cx(s.placed, format === "poster" && s.placedPoster)} style={{ left: `${20 + pw + 3}%`, top: `${top}%`, width: `${cw}%` }}>
         <div className={s.wallCard} dangerouslySetInnerHTML={{ __html: svg }} />

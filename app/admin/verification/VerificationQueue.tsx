@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -114,7 +115,7 @@ export default function VerificationQueue({ rows: initial, tab }: { rows: VerRow
                   <div className="grid grid-cols-4 gap-2">
                     {r.art.map((a) => (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img key={a.id} src={a.imageUrl} alt={a.title} className="aspect-[4/5] w-full rounded-[3px] object-cover" loading="lazy" />
+                      <img key={a.id} src={thumb(a.imageUrl, 640)} alt={a.title} className="aspect-[4/5] w-full rounded-[3px] object-cover" loading="lazy" />
                     ))}
                   </div>
                 </div>
@@ -221,7 +222,7 @@ function Who({ r, compact = false }: { r: VerRow; compact?: boolean }) {
     <div className="flex min-w-0 items-center gap-3">
       {r.avatar ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={r.avatar} alt="" className={compact ? "h-11 w-11 shrink-0 rounded-full object-cover" : "h-14 w-14 shrink-0 rounded-full object-cover"} />
+        <img src={thumb(r.avatar, 112)} alt="" className={compact ? "h-11 w-11 shrink-0 rounded-full object-cover" : "h-14 w-14 shrink-0 rounded-full object-cover"} />
       ) : (
         <span className={`grid shrink-0 place-items-center rounded-full bg-ink font-display font-bold text-white ${compact ? "h-11 w-11" : "h-14 w-14 text-xl"}`}>{r.name[0]}</span>
       )}

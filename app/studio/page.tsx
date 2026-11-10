@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import Greeting from "@/components/studio/Greeting";
 import NextSteps from "@/components/studio/NextSteps";
@@ -185,7 +186,7 @@ export default async function StudioHome() {
                   <li key={p.slug || p.title} className="flex items-center gap-3 text-[15px]">
                     <span className="t-small num w-4 font-bold">{i + 1}</span>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    {p.imageUrl && <img src={p.imageUrl} alt="" className="h-11 w-11 shrink-0 rounded-md object-cover" />}
+                    {p.imageUrl && <img src={thumb(p.imageUrl, 88)} alt="" className="h-11 w-11 shrink-0 rounded-md object-cover" />}
                     <div className="min-w-0 flex-1">
                       <b className="block truncate">{p.title}</b>
                       <span className="t-small num block">{p.prints} sold</span>

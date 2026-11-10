@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BrushStroke } from "@/components/af/Brush";
@@ -31,11 +32,11 @@ export default async function ScenesPage() {
                       {a.sensitive.length ? (
                         <SensitiveImage labels={a.sensitive} light>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={a.imageUrl} alt={a.title} className="h-full w-full object-cover" loading="lazy" />
+                          <img src={thumb(a.imageUrl, 640)} alt={a.title} className="h-full w-full object-cover" loading="lazy" />
                         </SensitiveImage>
                       ) : (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={a.imageUrl} alt={a.title} className="h-full w-full object-cover" loading="lazy" />
+                        <img src={thumb(a.imageUrl, 640)} alt={a.title} className="h-full w-full object-cover" loading="lazy" />
                       )}
                     </div>
                   ))}

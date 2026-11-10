@@ -2,6 +2,7 @@
 // /studio/scanning: book a painting scan (pick pieces, sizes, drop-off or NYC pickup, dates; live estimate) and follow
 // each booking through requested → confirmed (pay) → paid → scanning → delivered → returned, with the next step and its
 // button on every state. Server side: lib/scanning.server.ts.
+import { thumb } from "@/lib/img";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -211,7 +212,7 @@ function BookingForm({ arts, preselect, settings, first, onClose }: {
                       >
                         <span className="relative grid aspect-square place-items-center overflow-hidden rounded-lg bg-gallery p-2">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={a.imageUrl} alt="" className="max-h-full max-w-full bg-white object-contain shadow-[0_6px_14px_-4px_rgba(21,22,27,.4)]" />
+                          <img src={thumb(a.imageUrl, 640)} alt="" className="max-h-full max-w-full bg-white object-contain shadow-[0_6px_14px_-4px_rgba(21,22,27,.4)]" />
                           <span className={cn("absolute right-1.5 top-1.5 grid h-7 w-7 place-items-center rounded-full", on ? "bg-ink text-white" : "bg-white/90 text-ink opacity-0 transition group-hover:opacity-100")}>
                             {on ? <Check className="h-4 w-4" aria-hidden="true" /> : <Plus className="h-4 w-4" aria-hidden="true" />}
                           </span>
@@ -240,7 +241,7 @@ function BookingForm({ arts, preselect, settings, first, onClose }: {
                 return (
                   <li key={id} className="af-panel grid gap-2.5 p-3 sm:grid-cols-[56px_minmax(0,1fr)] sm:items-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={a.imageUrl} alt="" className="hidden h-14 w-14 rounded-[2px] bg-white object-cover sm:block" />
+                    <img src={thumb(a.imageUrl, 112)} alt="" className="hidden h-14 w-14 rounded-[2px] bg-white object-cover sm:block" />
                     <div className="grid gap-2">
                       <div className="flex items-baseline justify-between gap-2">
                         <b className="truncate">{a.title}{a.original && <span className="num ml-2 text-[13px] font-normal text-ink-2">original {a.original}</span>}</b>
@@ -488,7 +489,7 @@ function BookingCard({ b, settings, highlight, onBookAgain }: { b: ScanBookingVi
           <li key={i.id} className="flex items-center gap-2 rounded-xl border border-line bg-white py-1.5 pl-1.5 pr-3 text-[13px]">
             {i.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={i.imageUrl} alt="" className="h-9 w-9 rounded-[2px] object-cover" />
+              <img src={thumb(i.imageUrl, 72)} alt="" className="h-9 w-9 rounded-[2px] object-cover" />
             ) : (
               <span className="grid h-9 w-9 place-items-center rounded-[2px] bg-wall"><ImageOff className="h-4 w-4 text-ink-2" aria-hidden="true" /></span>
             )}

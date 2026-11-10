@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import SensitiveImage from "@/components/site/SensitiveImage";
@@ -32,11 +33,11 @@ export default function ArtistCard({ artist, trust }: { artist: DirArtist; trust
             {a.sensitive.length ? (
               <SensitiveImage labels={a.sensitive} light>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={a.imageUrl} alt={a.title} className="h-full w-full object-cover" loading="lazy" />
+                <img src={thumb(a.imageUrl, 640)} alt={a.title} className="h-full w-full object-cover" loading="lazy" />
               </SensitiveImage>
             ) : (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={a.imageUrl} alt={a.title} className="h-full w-full object-cover" loading="lazy" />
+              <img src={thumb(a.imageUrl, 640)} alt={a.title} className="h-full w-full object-cover" loading="lazy" />
             )}
           </div>
         ))}

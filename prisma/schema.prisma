@@ -34,6 +34,10 @@ model Order {
   kind            String  @default("retail")
   bulkArtistId    String?
   artistNotificationsSentAt DateTime?
+
+  @@index([createdAt])
+  @@index([email])
+  @@index([bulkArtistId])
 }
 
 model OrderItem {
@@ -63,6 +67,7 @@ model OrderItem {
 
   @@index([orderId])
   @@index([artworkId])
+  @@index([imageUrl])
 }
 
 model Payout {
@@ -204,6 +209,9 @@ model Artwork {
   // untouched original at `source` (its preview URL; that upload is kept so "Reset edits" can go back). null = unedited.
   imageEdits      Json?
   @@index([imageHash])
+  @@index([artistId, createdAt])
+  @@index([status, createdAt])
+  @@index([imageUrl])
 }
 
 enum ArtworkStatus {

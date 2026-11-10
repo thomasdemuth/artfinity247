@@ -9,8 +9,12 @@ import { inArtistFolder } from "@/lib/storage";
 /** Largest output we'll write (long edge), so a bad request can't ask for a gigapixel image. */
 const MAX_EDGE = 16000;
 
-/** Encodes print masters: high-quality JPEG, no chroma subsampling, sRGB. */
-const master = (img: sharp.Sharp) => img.jpeg({ quality: 95, chromaSubsampling: "4:4:4", mozjpeg: true });
+/**
+ * Encodes print masters: high-quality JPEG, no chroma subsampling, sRGB.
+ * Not mozjpeg: at this quality and size (a 24-megapixel photo) its trellis pass takes ~14 s against ~1 s for the
+ * standard encoder, for a file about 10% smaller. Saving an edit has to feel quick; the pixels are the same quality.
+ */
+const master = (img: sharp.Sharp) => img.jpeg({ quality: 95, chromaSubsampling: "4:4:4", optimiseCoding: true });
 
 /** Upright W×H of an image file (EXIF orientation applied). */
 export async function uprightSize(buf: Buffer) {

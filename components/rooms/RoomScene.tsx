@@ -60,8 +60,8 @@ export const RoomScene = memo(function RoomScene({ scene, imageUrl, aspect, size
       <div className={cn("relative aspect-[5/4] w-full overflow-hidden bg-wall", className)} data-scene={scene}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={photoSrc(scene, slug!, size, frame, 800, { mat, blur })}
-          srcSet={photoSrcSet(scene, slug!, size, frame, { mat, blur })}
+          src={photoSrc(scene, slug!, size, frame, 800, { mat, blur, image: imageUrl })}
+          srcSet={photoSrcSet(scene, slug!, size, frame, { mat, blur, image: imageUrl })}
           sizes={sizes || "(min-width: 768px) 600px, 100vw"}
           loading={eager ? "eager" : "lazy"}
           decoding="async"

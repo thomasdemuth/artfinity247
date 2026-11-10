@@ -19,6 +19,9 @@ export function hash32(s: string) {
   return h >>> 0;
 }
 
+/** Short key of an artwork's image URL: scene links carry it (`i`), so a link always means one exact picture. */
+export const artKey = (imageUrl: string) => hash32(imageUrl).toString(36);
+
 type Box = { x0: number; y0: number; x1: number; y1: number };
 const bbox = (pts: P[]): Box => ({
   x0: Math.min(...pts.map((p) => p[0])),

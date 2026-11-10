@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { Prisma } from "@prisma/client";
@@ -42,7 +43,7 @@ export default async function AdminArtworksPage({ searchParams }: { searchParams
       title: (
         <div className="flex min-w-0 items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={w.imageUrl} alt="" loading="lazy" className="h-[50px] w-[40px] shrink-0 rounded-[3px] object-cover" />
+          <img src={thumb(w.imageUrl, 100)} alt="" loading="lazy" className="h-[50px] w-[40px] shrink-0 rounded-[3px] object-cover" />
           <div className="min-w-0">
             <Link href={`/admin/artworks/${w.id}/edit`} className="block truncate font-semibold text-ink hover:text-scan">{w.title}</Link>
             {w.flaggedReason && <span className="block truncate text-[13px] text-coral">{w.flaggedReason}</span>}

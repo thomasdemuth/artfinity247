@@ -1,5 +1,6 @@
 // /order/[orderId]/help?t=<sig> — "Problem with your print?" from the shipped/delivered emails and the order page.
 // The signed link stands in for a buyer account (lib/reprints.ts). Open from shipping until about 14 days after delivery.
+import { thumb } from "@/lib/img";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
@@ -25,7 +26,7 @@ function Note({ title, children, thumbs, badge }: { title: string; children: Rea
         <div className="flex justify-center -space-x-3 pb-2">
           {thumbs.slice(0, 3).map((it, i) => (
             // eslint-disable-next-line @next/next/no-img-element
-            <img key={it.id} src={it.imageUrl} alt="" className="h-24 w-[76px] rounded-[2px] border-4 border-white object-cover shadow-[0_10px_24px_-12px_rgba(21,22,27,.6)]" style={{ transform: `rotate(${[-5, 3, -2][i]}deg)` }} />
+            <img key={it.id} src={thumb(it.imageUrl, 192)} alt="" className="h-24 w-[76px] rounded-[2px] border-4 border-white object-cover shadow-[0_10px_24px_-12px_rgba(21,22,27,.6)]" style={{ transform: `rotate(${[-5, 3, -2][i]}deg)` }} />
           ))}
         </div>
       )}

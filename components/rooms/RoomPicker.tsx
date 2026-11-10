@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import { errorText, failed, saved as savedToast } from "@/lib/feedback";
 import { useMemo, useState } from "react";
@@ -119,7 +120,7 @@ export default function RoomPicker({ art, arts }: { art: Art; arts: { slug: stri
                 className={cn("h-14 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition", a.slug === art.slug ? "border-ink" : "border-transparent opacity-70 hover:opacity-100")}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={a.imageUrl} alt={a.title} className="h-full w-full object-cover" loading="lazy" />
+                <img src={thumb(a.imageUrl, 640)} alt={a.title} className="h-full w-full object-cover" loading="lazy" />
               </Link>
             ))}
           </nav>

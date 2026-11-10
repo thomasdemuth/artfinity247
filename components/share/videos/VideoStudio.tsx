@@ -2,6 +2,7 @@
 // Share kit → Videos: pick a piece and a preset, watch the live preview, make a 6–15 s video (vertical 1080 × 1920 or
 // square 1080 × 1080) in the browser, then download it, share it (phones) and copy a caption.
 // Three presets are free; six more, brand colors, a logo outro and music are Infinity (shown locked, never dead).
+import { thumb } from "@/lib/img";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Copy, Download, Lock, Share2, Square, Volume2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -191,7 +192,7 @@ export default function VideoStudio({ art, arts, base, pro }: { art: ShareArt; a
         {locked ? (
           <div className="relative overflow-hidden rounded-[22px] border-[1.5px] border-ink bg-ink" style={{ aspectRatio: FORMATS[format].ratio }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={art.imageUrl} alt="" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-60 blur-[2px]" />
+            <img src={thumb(art.imageUrl, 640)} alt="" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-60 blur-[2px]" />
             <div className="absolute inset-0 grid place-content-center justify-items-center gap-3 p-6 text-center text-white">
               <Lock size={28} aria-hidden="true" />
               <p className="text-[15px] font-bold">{def.name} is an Infinity preset</p>

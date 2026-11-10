@@ -1,4 +1,4 @@
-// GET /api/scenes/render?scene=<0-999>&art=<slug>&size=small|medium|large|xl&frame=none|black|white|natural&w=800&mat=0&blur=1
+// GET /api/scenes/render?scene=<0-999>&art=<slug>&size=small|medium|large|xl&frame=none|black|white|natural&w=800&mat=0&blur=1&i=<image key>
 // One photo scene with the print hung at true size, as a JPEG. Cached on disk by content key, with an ETag.
 // X-Art-Box: where the framed print sits, as x0,y0,x1,y1 fractions of the image (the Share kit videos pan to it).
 // 404 when no photo scenes are built (the site then draws the procedural rooms instead).
@@ -10,6 +10,7 @@ import { loadCatalog, variantForScene } from "@/lib/scenes/catalog";
 import { composite, COMPOSITOR_VERSION } from "@/lib/scenes/composite";
 import { artForRender, readArtImage, sceneCacheDir } from "@/lib/scenes/server";
 import { FRAME_KEYS, PRINT_SIZE_KEYS, type FrameKey, type PrintSizeKey } from "@/lib/scenes/types";
+import { artKey } from "@/lib/scenes/variants";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -40,11 +41,19 @@ export async function GET(req: Request) {
     .digest("hex")
     .slice(0, 24);
   const etag = `"${key}"`;
+  // URLs carry the catalog rev and (from the site's own pages) `i`, a short key of the art's image, so a URL always
+  // means the same picture: the CDN keeps it (s-maxage) and no visitor waits for a render someone else already had.
+  // Without `i` (older links, the API) the art can change under the URL, so those are kept for an hour only.
+  // Art that isn't public yet (the artist's own preview) is never stored by a shared cache.
+  const keyed = !!q.get("i") && q.get("i") === artKey(art.imageUrl);
   const headers = {
     "Content-Type": "image/jpeg",
     ETag: etag,
-    // URLs carry the catalog rev; art changes change the ETag
-    "Cache-Control": "public, max-age=3600, stale-while-revalidate=604800",
+    "Cache-Control": !art.isPublic
+      ? "private, max-age=3600"
+      : keyed
+        ? "public, max-age=86400, s-maxage=2592000, stale-while-revalidate=604800"
+        : "public, max-age=3600, s-maxage=3600, stale-while-revalidate=604800",
     "X-Scene-Variant": hit.variant.id,
   };
   if (req.headers.get("if-none-match") === etag) return new NextResponse(null, { status: 304, headers });

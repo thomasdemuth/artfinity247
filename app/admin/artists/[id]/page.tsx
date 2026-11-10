@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -137,7 +138,7 @@ export default async function AdminArtistPage({ params }: { params: { id: string
         title={
           <span className="flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            {a.profileImage ? <img src={a.profileImage} alt="" className="h-12 w-12 shrink-0 rounded-full object-cover" /> : <span className="h-12 w-12 shrink-0 rounded-full bg-gallery" />}
+            {a.profileImage ? <img src={thumb(a.profileImage, 96)} alt="" className="h-12 w-12 shrink-0 rounded-full object-cover" /> : <span className="h-12 w-12 shrink-0 rounded-full bg-gallery" />}
             <span className="min-w-0 break-words">{name}</span>
           </span>
         }
@@ -229,7 +230,7 @@ export default async function AdminArtistPage({ params }: { params: { id: string
                 {artworks.map((w) => (
                   <li key={w.id} className="grid grid-cols-[44px_minmax(0,1fr)] items-center gap-3">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={w.imageUrl} alt="" className="h-[55px] w-[44px] rounded-[3px] object-cover" loading="lazy" />
+                    <img src={thumb(w.imageUrl, 110)} alt="" className="h-[55px] w-[44px] rounded-[3px] object-cover" loading="lazy" />
                     <div className="min-w-0 text-[13.5px]">
                       <Link href={`/admin/artworks/${w.id}/edit`} className="block truncate font-semibold text-ink hover:text-scan">{w.title}</Link>
                       <span className="t-small flex flex-wrap items-center gap-1.5">

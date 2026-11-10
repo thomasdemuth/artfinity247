@@ -2,7 +2,7 @@
 // When it lists no photos, everything here falls back to the procedural rooms, so nothing changes until photos exist.
 import manifest from "@/data/scenes-client.json";
 import { autoScenes, sceneInfo, scenesFor } from "@/lib/rooms/scene";
-import { hash32, SCENE_SLOTS } from "./variants";
+import { artKey, hash32, SCENE_SLOTS } from "./variants";
 import { GRADE_LABEL, type ClientManifest, type FrameKey, type Grade, type PrintSizeKey, type RoomTag } from "./types";
 
 const M = manifest as unknown as ClientManifest;
@@ -28,13 +28,20 @@ export function sceneLabel(n: number) {
 }
 
 const WIDTHS = [480, 800, 1200, 1600];
-export function photoSrc(n: number, slug: string, size: PrintSizeKey, frame: FrameKey | null | undefined, w = 1200, o: { mat?: boolean; blur?: boolean } = {}) {
+type SrcOpts = {
+  mat?: boolean;
+  blur?: boolean;
+  /** The artwork's image URL. With it the link names this exact picture (`i`), so it can be cached for a long time. */
+  image?: string | null;
+};
+export function photoSrc(n: number, slug: string, size: PrintSizeKey, frame: FrameKey | null | undefined, w = 1200, o: SrcOpts = {}) {
   const q = new URLSearchParams({ scene: String(norm(n)), art: slug, size, frame: frame || "none", w: String(w), v: M.rev });
   if (o.mat === false) q.set("mat", "0");
   if (o.blur) q.set("blur", "1");
+  if (o.image) q.set("i", artKey(o.image));
   return `/api/scenes/render?${q}`;
 }
-export function photoSrcSet(n: number, slug: string, size: PrintSizeKey, frame: FrameKey | null | undefined, o: { mat?: boolean; blur?: boolean } = {}) {
+export function photoSrcSet(n: number, slug: string, size: PrintSizeKey, frame: FrameKey | null | undefined, o: SrcOpts = {}) {
   return WIDTHS.map((w) => `${photoSrc(n, slug, size, frame, w, o)} ${w}w`).join(", ");
 }
 

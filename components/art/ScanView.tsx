@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { useEffect, useMemo, useState } from "react";
 import ReviewStars from "@/components/reviews/ReviewStars";
 import MerchPreview from "@/components/art/MerchPreview";
@@ -344,7 +345,7 @@ export default function ScanView({
             <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full bg-wall">
               {artist.avatar ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={artist.avatar} alt="" className="h-full w-full object-cover" />
+                <img src={thumb(artist.avatar, 640)} alt="" className="h-full w-full object-cover" />
               ) : (
                 <span className="grid h-full w-full place-items-center text-sm font-bold">{artist.name[0]}</span>
               )}

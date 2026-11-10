@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { BrushStroke } from "@/components/af/Brush";
@@ -21,7 +22,7 @@ export default function CityRow({ cities }: { cities: CityCard[] }) {
               {c.art.slice(0, 2).map((a, k) => (
                 <span key={a.slug} className={cn("absolute aspect-[4/5] bg-white p-[3px] shadow-[0_10px_18px_-8px_rgba(21,22,27,.45)] transition duration-500 group-hover:-translate-y-1", HANG[k])}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={a.imageUrl} alt="" className="h-full w-full object-cover" loading="lazy" />
+                  <img src={thumb(a.imageUrl, 640)} alt="" className="h-full w-full object-cover" loading="lazy" />
                 </span>
               ))}
               <span className="absolute inset-x-0 bottom-0 h-[12%] bg-[#dcd6ca]" aria-hidden="true" />

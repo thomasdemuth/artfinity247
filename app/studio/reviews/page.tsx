@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import { StudioPage } from "@/components/studio/StudioPage";
 import { EmptyState } from "@/components/studio/EmptyState";
@@ -126,7 +127,7 @@ export default async function StudioReviewsPage({ searchParams }: { searchParams
                   <div className="flex items-start gap-3">
                     {r.artwork && (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={r.artwork.imageUrl} alt="" className="h-14 w-11 shrink-0 rounded-[2px] object-cover" />
+                      <img src={thumb(r.artwork.imageUrl, 112)} alt="" className="h-14 w-11 shrink-0 rounded-[2px] object-cover" />
                     )}
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -144,7 +145,7 @@ export default async function StudioReviewsPage({ searchParams }: { searchParams
                   {r.photoUrl && (
                     <a href={r.photoUrl} target="_blank" rel="noopener" className="block w-fit">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={r.photoUrl} alt={`${r.buyerName}'s wall`} className="h-36 w-auto max-w-full rotate-[-1deg] rounded-[3px] border-4 border-white object-cover shadow-[0_8px_20px_-10px_rgba(21,22,27,.5)]" />
+                      <img src={thumb(r.photoUrl, 288)} alt={`${r.buyerName}'s wall`} className="h-36 w-auto max-w-full rotate-[-1deg] rounded-[3px] border-4 border-white object-cover shadow-[0_8px_20px_-10px_rgba(21,22,27,.5)]" />
                     </a>
                   )}
                   <ReplyBox reviewId={r.id} initial={r.artistReply} buyerFirst={r.buyerName.split(" ")[0]} />

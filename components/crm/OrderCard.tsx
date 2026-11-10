@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import { Check, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SIZE_TEXT, STAGE_META, STAGE_ORDER, shortDate, usd, type Stage } from "./format";
@@ -29,7 +30,7 @@ export default function OrderCard({ order }: { order: OrderCardData }) {
           <li key={it.id} className="flex items-center gap-3">
             {it.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={it.imageUrl} alt={it.title} className="h-16 w-16 shrink-0 rounded-[3px] object-cover shadow-[0_1px_0_var(--af-line)]" />
+              <img src={thumb(it.imageUrl, 128)} alt={it.title} className="h-16 w-16 shrink-0 rounded-[3px] object-cover shadow-[0_1px_0_var(--af-line)]" />
             ) : (
               <span className="h-16 w-16 shrink-0 rounded-[3px] bg-wall" aria-hidden="true" />
             )}

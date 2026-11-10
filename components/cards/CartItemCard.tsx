@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { ReactNode } from "react";
 import Link from "next/link";
 import { Minus, Plus } from "lucide-react";
@@ -27,7 +28,7 @@ const CartItemCard = ({ item, className, readOnly = false }: { item: CartItemTyp
       <Link href={href} className="block overflow-hidden rounded-[3px] bg-white p-1 shadow-[0_6px_14px_-6px_rgba(21,22,27,.45)]">
         <SensitiveImage labels={p.sensitive}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={p.imageUrl || ""} alt={p.title} className="aspect-[4/5] w-full object-cover" />
+          <img src={thumb(p.imageUrl || "", 640)} alt={p.title} className="aspect-[4/5] w-full object-cover" />
         </SensitiveImage>
       </Link>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { CSSProperties, MouseEvent, ReactNode, useState } from "react";
 import { toast } from "sonner";
 import { ArrowRight, EyeOff, Mail, Share } from "lucide-react";
@@ -46,7 +47,7 @@ function Background({ data, theme, mode }: { data: LinksPageData; theme: LinksTh
       <div className={cn(pos, "inset-0 -z-0 overflow-hidden")} style={wash ? { background: theme.washColor } : { background: "#15161b" }} aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={art.imageUrl}
+          src={thumb(art.imageUrl, 1280)}
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
           style={{
@@ -179,7 +180,7 @@ function ShopCard({ data, theme }: { data: LinksPageData; theme: LinksTheme }) {
               <li key={t.id}>
                 <a href={t.slug ? artPath(data.slug, t.slug) : artistPath(data.slug)} className="relative block aspect-square overflow-hidden rounded-[10px] bg-black/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={t.imageUrl} alt={t.title} loading="lazy" className={cn("h-full w-full object-cover transition group-hover:scale-105", blur && "sensitive-blur")} />
+                  <img src={thumb(t.imageUrl, 640)} alt={t.title} loading="lazy" className={cn("h-full w-full object-cover transition group-hover:scale-105", blur && "sensitive-blur")} />
                   {blur && <span className="absolute inset-0 grid place-items-center bg-black/25 p-1 text-center text-[12px] font-bold text-white">{t.sensitive[0]}</span>}
                 </a>
               </li>
@@ -247,7 +248,7 @@ export default function LinkPage({ data, theme: themeOverride, mode = "page" }: 
         {/* Who */}
         {data.avatar ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={data.avatar} alt="" className="h-24 w-24 rounded-full border-[3px] object-cover shadow-lg" style={{ borderColor: ink }} />
+          <img src={thumb(data.avatar, 192)} alt="" className="h-24 w-24 rounded-full border-[3px] object-cover shadow-lg" style={{ borderColor: ink }} />
         ) : (
           <span aria-hidden="true" className="grid h-24 w-24 place-items-center rounded-full bg-sticker text-[40px] font-extrabold text-ink shadow-lg" style={{ fontFamily: font.display }}>
             {data.name.slice(0, 1).toUpperCase()}

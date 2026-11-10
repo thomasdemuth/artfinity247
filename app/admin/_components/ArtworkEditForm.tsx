@@ -1,5 +1,6 @@
 "use client";
 
+import { thumb } from "@/lib/img";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -104,7 +105,7 @@ export default function ArtworkEditForm({ artwork }: { artwork: AdminArtwork }) 
     <form onSubmit={save} className="grid items-start gap-6 rounded-2xl border border-edge bg-white p-4 sm:p-6 lg:grid-cols-[280px_minmax(0,1fr)]" noValidate>
       <div className="overflow-hidden rounded-[4px] bg-gallery">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={artwork.imageUrl} alt={saved.title} className="max-h-[360px] w-full object-contain" />
+        <img src={thumb(artwork.imageUrl, 1280)} alt={saved.title} className="max-h-[360px] w-full object-contain" />
       </div>
 
       <div className="grid gap-5">

@@ -1,3 +1,4 @@
+import { thumb } from "@/lib/img";
 import Link from "next/link";
 import { collectionPath } from "@/lib/urls";
 import SensitiveImage from "@/components/site/SensitiveImage";
@@ -22,7 +23,7 @@ export default async function CollectionsTab({ artistSlug, collections }: { arti
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   key={p.id}
-                  src={p.imageUrl}
+                  src={thumb(p.imageUrl, 640)}
                   alt=""
                   aria-hidden
                   className={`absolute top-[16%] h-[58%] w-auto bg-white object-contain p-1 opacity-90 shadow-[0_8px_18px_-8px_rgba(21,22,27,.45)] transition duration-300 ${p.sensitive.length ? "blur-md" : ""} ${i === 0 ? "left-[8%] rotate-[-5deg] group-hover:-translate-x-1" : "right-[8%] rotate-[4deg] group-hover:translate-x-1"}`}
