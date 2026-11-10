@@ -70,8 +70,7 @@ async function getExtras(artistId: string) {
 
 export default async function SalesPage({ searchParams }: { searchParams: { when?: string; month?: string; sort?: string; all?: string } }) {
   const artist = await requireArtist("/studio/sales");
-  const splitNow = await artistSplitNow(artist.id);
-  const [allSales, { extras }, artCount, bal] = await Promise.all([getSales(artist.id), getExtras(artist.id), prisma.artwork.count({ where: { artistId: artist.id } }), getBalance(artist.id)]);
+  const [splitNow, allSales, { extras }, artCount, bal] = await Promise.all([artistSplitNow(artist.id), getSales(artist.id), getExtras(artist.id), prisma.artwork.count({ where: { artistId: artist.id } }), getBalance(artist.id)]);
   // Where each sale's money is: on hold, ready for the next payout, or paid.
   const bucket = new Map<string, MoneyBucket>(bal.ledger.map((l) => [l.id, bucketOf(l, bal.currentMonth)]));
   const when = searchParams.when || searchParams.month || "";

@@ -40,7 +40,8 @@ export default async function StudioHome() {
   const artist = await requireArtist("/studio");
   const now = new Date();
   const since = new Date(now.getTime() - 30 * DAY);
-  const [allSales, artworks, trust, ver, plan, balance, eventCount, codeCount] = await Promise.all([
+  // everything this page shows, asked for at once (each line used to wait for the one before it)
+  const [allSales, artworks, trust, ver, plan, balance, eventCount, codeCount, stale, split, scanOn, limitedCount, scanOpen, scans, scansBefore, viewsWeek] = await Promise.all([
     getSales(artist.id),
     getArtworks(artist.id),
     getArtistTrust(artist.id),
@@ -49,30 +50,26 @@ export default async function StudioHome() {
     getBalance(artist.id, now),
     prisma.studioEvent.count({ where: { artistId: artist.id } }),
     prisma.qrCode.count({ where: { artistId: artist.id } }),
-  ]);
-  const sales = allSales.filter((s) => s.date >= since);
-  // Printed labels that show an old price, discount or title (lib/labelStatus.ts).
-  const stale = await staleLabels(artist.id).catch(() => []);
-  const staleOnPrice = stale.filter((l) => l.diffs.includes("price") || l.diffs.includes("discount")).length;
-  const labelAlerts = stale.length
-    ? [{ label: `${stale.length} printed ${stale.length === 1 ? "label shows" : "labels show"} ${staleOnPrice ? "an old price" : "an old title"}`, href: "/studio/codes?show=stale", act: "See them" }]
-    : [];
-  const split = await artistSplitNow(artist.id);
-  // Painting scans: suggest one when more than one piece can't print at the biggest size (lib/scanning.server.ts).
-  const [scanOn, limitedCount, scanOpen] = await Promise.all([
+    // Printed labels that show an old price, discount or title (lib/labelStatus.ts).
+    staleLabels(artist.id).catch(() => []),
+    artistSplitNow(artist.id),
+    // Painting scans: suggest one when more than one piece can't print at the biggest size (lib/scanning.server.ts).
     readScanSettings().then((s) => s.enabled).catch(() => false),
     prisma.artwork.count({ where: { artistId: artist.id, status: { not: "REJECTED" }, printableSizes: { isEmpty: false }, NOT: { printableSizes: { has: "xl" } } } }),
     prisma.scanBooking.count({ where: { artistId: artist.id, status: { in: ["requested", "confirmed", "paid", "scanning"] } } }),
-  ]);
-  const scanSuggestion = limitedCount > 1 && !scanOpen
-    ? { label: `${limitedCount} pieces can't print at XL yet`, note: scanOn ? "We scan the originals in NYC so every size prints sharp." : "Painting scans are coming soon. Join the waitlist.", href: "/studio/scanning", act: scanOn ? "Book a scan" : "Join" }
-    : null;
-  // Real scans of the artist's short link codes: last 30 days vs the 30 before.
-  const [scans, scansBefore, viewsWeek] = await Promise.all([
+    // Real scans of the artist's short link codes: last 30 days vs the 30 before.
     countArtistScans(artist.id, since, now),
     countArtistScans(artist.id, new Date(since.getTime() - 30 * DAY), since),
     countArtistViews(artist.id, new Date(now.getTime() - 7 * DAY), now),
   ]);
+  const sales = allSales.filter((s) => s.date >= since);
+  const staleOnPrice = stale.filter((l) => l.diffs.includes("price") || l.diffs.includes("discount")).length;
+  const labelAlerts = stale.length
+    ? [{ label: `${stale.length} printed ${stale.length === 1 ? "label shows" : "labels show"} ${staleOnPrice ? "an old price" : "an old title"}`, href: "/studio/codes?show=stale", act: "See them" }]
+    : [];
+  const scanSuggestion = limitedCount > 1 && !scanOpen
+    ? { label: `${limitedCount} pieces can't print at XL yet`, note: scanOn ? "We scan the originals in NYC so every size prints sharp." : "Painting scans are coming soon. Join the waitlist.", href: "/studio/scanning", act: scanOn ? "Book a scan" : "Join" }
+    : null;
   const scanDelta = !scans && !scansBefore ? (codeCount ? "Hang your codes to start" : "Print a code to start") : !scansBefore ? "New this month" : `${scans >= scansBefore ? "+" : "−"}${Math.abs(Math.round(((scans - scansBefore) / scansBefore) * 100))}% on last month`;
 
   const prints = sales.reduce((n, s) => n + s.quantity, 0);

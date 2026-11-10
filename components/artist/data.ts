@@ -92,12 +92,15 @@ export const getArtistPage = cache(async (rawSlug: string): Promise<ArtistPageDa
   if (!artist || artist.closedAt || artist.suspendedAt) return null;
 
   // Paid prints per artwork (sum of quantities on paid orders).
-  const soldRows = await prisma.orderItem.groupBy({
-    by: ["artworkId"],
-    where: { artwork: { artistId: artist.id }, order: { paymentStatus: "paid", kind: { not: "bulk" } } },
-    _sum: { quantity: true },
-    _count: { _all: true },
-  });
+  const [soldRows, trust] = await Promise.all([
+    prisma.orderItem.groupBy({
+      by: ["artworkId"],
+      where: { artwork: { artistId: artist.id }, order: { paymentStatus: "paid", kind: { not: "bulk" } } },
+      _sum: { quantity: true },
+      _count: { _all: true },
+    }),
+    getArtistTrust(artist.id),
+  ]);
   const sold = new Map<string, number>(
     soldRows.map((r) => [r.artworkId ?? "", r._sum.quantity ?? r._count._all])
   );
@@ -116,7 +119,6 @@ export const getArtistPage = cache(async (rawSlug: string): Promise<ArtistPageDa
   const sales = soldRows.reduce((n, r) => n + (r._sum.quantity ?? r._count._all), 0);
 
   const theme = parseTheme(artist.pageTheme, works.map((w) => w.id));
-  const trust = await getArtistTrust(artist.id);
 
   const name = artist.artist_name || artist.name;
   const city = [artist.city, artist.state].filter(Boolean).join(", ");

@@ -97,19 +97,22 @@ export default async function ArtistPage({ params, searchParams }: Props) {
     if (moved) permanentRedirect(artistPath(moved));
     notFound();
   }
-  const socials = await getArtistSocials(artist.id);
-  const collections = await getPublicCollections(artist.slug);
-  const { summary: rating, reviews } = await getReviews({ artistId: artist.id });
+  // asked for together, not one after another
+  const [socials, collections, { summary: rating, reviews }, me, venues, followers] = await Promise.all([
+    getArtistSocials(artist.id),
+    getPublicCollections(artist.slug),
+    getReviews({ artistId: artist.id }),
+    getUserFromCookie(),
+    venuesFor(artist.id),
+    activeFollowerCount(artist.id),
+  ]);
 
-  const me = await getUserFromCookie();
   const isOwner = !!me?.slug && me.slug.toLowerCase() === artist.slug.toLowerCase();
   const preview = isOwner ? previewTheme(searchParams?.theme) : null;
   const theme = preview ? parseTheme(preview, artist.works.map((w) => w.id)) : artist.theme;
   const banner = preview ? resolveBanner(artist.works, theme) : artist.banner;
   const accent = paint(theme.accent);
   const trust = { ...artist.trust, medal: theme.showStats ? artist.trust.earned : null };
-  const venues = await venuesFor(artist.id);
-  const followers = await activeFollowerCount(artist.id);
   const tagline = artist.bio ? firstSentence(artist.bio) : "";
   const [cityShort, stateShort] = artist.city.split(",").map((s) => s.trim());
   const since = artist.memberSince.toLocaleDateString("en-US", { month: "long", year: "numeric" });

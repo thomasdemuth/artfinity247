@@ -47,6 +47,38 @@ export default async function AdminDashboard() {
   ];
   const since30 = windows[2].since;
 
+  // The dashboard's sections don't depend on each other, so their queries all start now and are picked up below
+  // (they used to run one section after another, each waiting on the database in turn).
+  const early = <T,>(p: Promise<T>) => (p.catch(() => {}), p);
+  const alertsP = early(openAlerts().catch(() => []));
+  const waitingP = early(Promise.all([
+    prisma.codePrintOrder.count({ where: { status: "paid" } }).catch(() => 0),
+    prisma.scanBooking.count({ where: { status: "requested" } }).catch(() => 0),
+  ]));
+  const businessP = early((async () => {
+    const rows = await Promise.all([
+      prisma.orderItem.findMany({
+        where: { order: { paymentStatus: "paid", kind: { not: "bulk" }, createdAt: { gte: since30 } } },
+        select: { id: true, orderId: true, lineTotal: true, unitPrice: true, quantity: true, size: true, frameChosen: true, artistSplit: true, qrCodeId: true, artwork: { select: { artistId: true } }, order: { select: { createdAt: true } } },
+      }),
+      prisma.scanEvent.findMany({ where: { createdAt: { gte: since30 } }, select: { createdAt: true } }),
+      prisma.artist.findMany({ where: { createdAt: { gte: since30 }, role: "USER" }, select: { createdAt: true } }),
+    ]);
+    return { rows, refunds: await activeRefunds(Array.from(new Set(rows[0].map((i) => i.orderId)))) };
+  })());
+  const testP = early((async () => {
+    const start = await testStart();
+    const firstOrder = start.date ? null : await prisma.order.findFirst({ where: { paymentStatus: "paid", kind: { not: "bulk" } }, orderBy: { createdAt: "asc" }, select: { createdAt: true } });
+    const startAt = start.date ? new Date(`${start.date}T00:00:00-05:00`) : firstOrder?.createdAt ?? now;
+    const testItems = await prisma.orderItem.findMany({
+      where: { order: { paymentStatus: "paid", kind: { not: "bulk" }, createdAt: { gte: startAt } } },
+      select: { id: true, orderId: true, quantity: true },
+    });
+    const testRefunds = await activeRefunds(Array.from(new Set(testItems.map((i) => i.orderId))));
+    return { start, startAt, testItems, testRefunds };
+  })());
+  const infinityP = early(billingOverview().catch(() => null));
+
   // ---------- Needs attention ----------
   const [pendingArt, duplicates, openReports, flaggedReviews, reprints, notSent, failedWo, shippedOrders, late, toVerify, stripePending] = await Promise.all([
     prisma.artwork.count({ where: { status: "PENDING", NOT: { flaggedReason: { startsWith: DUPLICATE_PREFIX } } } }),
@@ -62,21 +94,16 @@ export default async function AdminDashboard() {
     prisma.artist.findMany({ where: { stripeAccountId: { not: null }, stripePayoutsEnabled: false }, select: { id: true, stripeAccountId: true, stripePayoutsEnabled: true } }),
   ]);
   // Shipped date = Order.shippedAt, else when tracking was saved (older orders kept it as a Message), else the order date.
-  const shippedAt = await shippedDates(shippedOrders.map((o) => o.id));
+  const [shippedAt, stripeBalances] = await Promise.all([
+    shippedDates(shippedOrders.map((o) => o.id)),
+    Promise.all(stripePending.filter((a) => connectStatus(a) === "pending").map((a) => getBalance(a.id, now))),
+  ]);
   const staleShipped = shippedOrders.filter((o) => (shippedAt.get(o.id) ?? o.createdAt).getTime() < now.getTime() - SHIPPED_STALE_DAYS * DAY).length;
   const lateArtists = new Set(late.map((l) => l.artistId)).size;
-  let stripeWithBalance = 0;
-  for (const a of stripePending.filter((a) => connectStatus(a) === "pending")) {
-    const b = await getBalance(a.id, now);
-    if (b.pendingCents + b.availableCents > 0) stripeWithBalance++;
-  }
+  const stripeWithBalance = stripeBalances.filter((b) => b.pendingCents + b.availableCents > 0).length;
 
   // Open alerts not snoozed. Urgent ones are listed one by one; the rest only when no queue below covers them.
-  const alerts = await openAlerts().catch(() => []);
-  const [codeOrders, scanBookings] = await Promise.all([
-    prisma.codePrintOrder.count({ where: { status: "paid" } }).catch(() => 0),
-    prisma.scanBooking.count({ where: { status: "requested" } }).catch(() => 0),
-  ]);
+  const [alerts, [codeOrders, scanBookings]] = await Promise.all([alertsP, waitingP]);
   // Just one waiting: open that exact item, not the list it sits in.
   const [oneCode, oneScan, oneUnsent, oneFailed] = await Promise.all([
     codeOrders === 1 ? prisma.codePrintOrder.findFirst({ where: { status: "paid" }, select: { id: true } }).catch(() => null) : null,
@@ -109,15 +136,7 @@ export default async function AdminDashboard() {
   const total = queue.reduce((n, t) => n + (t.urgent ? 1 : t.n), 0);
 
   // ---------- Business numbers ----------
-  const [items, scans, newArtists] = await Promise.all([
-    prisma.orderItem.findMany({
-      where: { order: { paymentStatus: "paid", kind: { not: "bulk" }, createdAt: { gte: since30 } } },
-      select: { id: true, orderId: true, lineTotal: true, unitPrice: true, quantity: true, size: true, frameChosen: true, artistSplit: true, qrCodeId: true, artwork: { select: { artistId: true } }, order: { select: { createdAt: true } } },
-    }),
-    prisma.scanEvent.findMany({ where: { createdAt: { gte: since30 } }, select: { createdAt: true } }),
-    prisma.artist.findMany({ where: { createdAt: { gte: since30 }, role: "USER" }, select: { createdAt: true } }),
-  ]);
-  const refunds = await activeRefunds(Array.from(new Set(items.map((i) => i.orderId))));
+  const { rows: [items, scans, newArtists], refunds } = await businessP;
   const lines = items.filter((i) => !refunds.has(i.id)).map((i) => {
     const b = itemBreakdown({ ...i, orderDate: i.order.createdAt });
     return { at: i.order.createdAt, orderId: i.orderId, sales: b.lineTotal, profit: b.companyShare, prints: b.quantity, scan: !!i.qrCodeId, artistId: i.artwork?.artistId ?? null };
@@ -144,14 +163,7 @@ export default async function AdminDashboard() {
   const activeArtists = new Set(lines.map((l) => l.artistId).filter(Boolean)).size;
 
   // ---------- 90-day test ----------
-  const start = await testStart();
-  const firstOrder = start.date ? null : await prisma.order.findFirst({ where: { paymentStatus: "paid", kind: { not: "bulk" } }, orderBy: { createdAt: "asc" }, select: { createdAt: true } });
-  const startAt = start.date ? new Date(`${start.date}T00:00:00-05:00`) : firstOrder?.createdAt ?? now;
-  const testItems = await prisma.orderItem.findMany({
-    where: { order: { paymentStatus: "paid", kind: { not: "bulk" }, createdAt: { gte: startAt } } },
-    select: { id: true, orderId: true, quantity: true },
-  });
-  const testRefunds = await activeRefunds(Array.from(new Set(testItems.map((i) => i.orderId))));
+  const { start, startAt, testItems, testRefunds } = await testP;
   const sold = testItems.filter((i) => !testRefunds.has(i.id)).reduce((n, i) => n + (i.quantity || 1), 0);
   const elapsed = Math.max(0, Math.min(TEST_DAYS, Math.floor((now.getTime() - startAt.getTime()) / DAY)));
   const daysLeft = TEST_DAYS - elapsed;
@@ -160,7 +172,7 @@ export default async function AdminDashboard() {
   const currentPace = elapsed >= 7 ? Math.round((sold / elapsed) * 7 * 10) / 10 : null;
   const onTrack = sold >= TEST_TARGET || (elapsed > 0 && sold / elapsed >= TEST_TARGET / TEST_DAYS);
 
-  const infinity = await billingOverview().catch(() => null);
+  const infinity = await infinityP;
   const health = integrationsHealth();
   const dateLabel = now.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric", timeZone: "America/New_York" });
 

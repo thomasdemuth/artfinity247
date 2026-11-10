@@ -7,6 +7,7 @@ import Provider from "@/components/contexts";
 import BrushDefs from "@/components/af/BrushDefs";
 import PwaSetup from "@/components/pwa/PwaSetup";
 import SkipLink from "@/components/a11y/SkipLink";
+import NavProgress from "@/components/site/NavProgress";
 import "./globals.css";
 
 const display = Bricolage_Grotesque({
@@ -56,6 +57,7 @@ const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
     <html lang="en">
       <body className={cn("font-body", display.variable, body.variable)}>
         <SkipLink />
+        <NavProgress />
         <BrushDefs />
         <Provider>{children}</Provider>
         <Toaster position="top-center" richColors />

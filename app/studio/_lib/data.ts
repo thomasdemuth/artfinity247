@@ -1,4 +1,5 @@
 // Server-only data helpers for the artist Studio.
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
@@ -24,20 +25,27 @@ export function currentPath(fallback = "/studio") {
   return p && p.startsWith("/studio") ? p : fallback;
 }
 
+// The Studio layout and the page under it both ask for the artist (and their plan); React's request cache makes
+// that one query per page load instead of one per caller.
+const studioArtistRow = cache((id: string) =>
+  prisma.artist.findUnique({
+    where: { id },
+    select: {
+      id: true, slug: true, name: true, first_name: true, artist_name: true, city: true,
+      profileImage: true, bio: true, venmoHandle: true, email: true, role: true, closedAt: true, suspendedAt: true, suspendedReason: true,
+      emailVerifiedAt: true,
+    },
+  }),
+);
+const planRow = cache((id: string) => prisma.artist.findUnique({ where: { id }, select: { plan: true, proUntil: true } }));
+
 /** Signed-in artist, or a redirect to the login page. */
 export async function requireArtist(nextPath?: string) {
   const user = await getUserFromCookie();
   // The middleware header has the exact path and query; nextPath is the fallback.
   const next = currentPath(nextPath || "/studio");
   if (!user?.id) redirect(`/login?next=${encodeURIComponent(next)}`);
-  const artist = await prisma.artist.findUnique({
-    where: { id: user.id },
-    select: {
-      id: true, slug: true, name: true, first_name: true, artist_name: true, city: true,
-      profileImage: true, bio: true, venmoHandle: true, email: true, role: true, closedAt: true, suspendedAt: true, suspendedReason: true,
-      emailVerifiedAt: true,
-    },
-  });
+  const artist = await studioArtistRow(user.id);
   if (!artist) redirect(`/login?next=${encodeURIComponent(next)}`);
   // A closed account's old cookie no longer opens the Studio.
   if (artist.closedAt) redirect("/login?closed=1");
@@ -46,7 +54,7 @@ export async function requireArtist(nextPath?: string) {
 
 /** The artist's share of profit on a sale today (70% while Infinity is active). */
 export async function artistSplitNow(artistId: string) {
-  const a = await prisma.artist.findUnique({ where: { id: artistId }, select: { plan: true, proUntil: true } });
+  const a = await planRow(artistId);
   return getArtistSplitFor({ orderDate: new Date(), plan: a?.plan, proUntil: a?.proUntil });
 }
 

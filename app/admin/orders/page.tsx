@@ -38,16 +38,19 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
   });
 
   // Tracking: the order's columns, else the older Message on the order (lib/shipping/store.ts).
-  const trackingByOrder = await trackingForOrders(orders);
-
   // Artists' thank-you notes to print into the parcel: Messages tagged [parcel] on the order (Studio customer page).
-  const parcelRows = orders.length
-    ? await prisma.message.findMany({
-        where: { orderId: { in: orders.map((o) => o.id) }, direction: "out", subject: { startsWith: PARCEL_TAG } },
-        orderBy: { createdAt: "asc" },
-        select: { id: true, orderId: true, subject: true, body: true, createdAt: true, artist: { select: { artist_name: true, name: true } } },
-      })
-    : [];
+  // Tracking, notes and refunds are looked up together.
+  const [trackingByOrder, parcelRows, refunds] = await Promise.all([
+    trackingForOrders(orders),
+    orders.length
+      ? prisma.message.findMany({
+          where: { orderId: { in: orders.map((o) => o.id) }, direction: "out", subject: { startsWith: PARCEL_TAG } },
+          orderBy: { createdAt: "asc" },
+          select: { id: true, orderId: true, subject: true, body: true, createdAt: true, artist: { select: { artist_name: true, name: true } } },
+        })
+      : [],
+    activeRefunds(orders.map((o) => o.id)),
+  ]);
   const parcelByOrder = new Map<string, NonNullable<AdminOrder["parcelNotes"]>>();
   for (const m of parcelRows) {
     if (!m.orderId) continue;
@@ -56,7 +59,6 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
     parcelByOrder.set(m.orderId, list);
   }
 
-  const refunds = await activeRefunds(orders.map((o) => o.id));
 
   const shaped: AdminOrder[] = orders.map((o) => {
     const items = o.items.map((it) => {

@@ -66,12 +66,15 @@ async function printsThisMonth(artistId: string) {
 }
 
 export default async function Home({ searchParams }: { searchParams?: Record<string, string | string[] | undefined> }) {
-  const [hero, artists, popular, cities] = await Promise.all([getHeroArt(), getArtists({ take: 4, pieces: 1 }), getPopular(), getCityCards()]);
-  const trust = await getTrustBySlug(artists.map((a) => a.slug));
+  const heroP = getHeroArt();
+  const monthP = heroP.then((h) => (h ? printsThisMonth(h.artistId) : 0));
+  const artistsP = getArtists({ take: 4, pieces: 1 });
+  const trustP = artistsP.then((list) => getTrustBySlug(list.map((a) => a.slug)));
+  const [hero, artists, popular, cities, trust, heroPrints] = await Promise.all([heroP, artistsP, getPopular(), getCityCards(), trustP, monthP]);
   const perPrint = hero ? breakdown("medium", hero.markupMedium ?? 0).artist : breakdown("medium", 1500).artist;
   const smallPerPrint = hero ? breakdown("small", hero.markupSmall ?? 0).artist : breakdown("small", 1000).artist;
   const price = breakdown("medium", hero?.markupMedium ?? 1500).price;
-  const monthBefore = hero ? Math.max(1, await printsThisMonth(hero.artistId)) * perPrint : 0;
+  const monthBefore = hero ? Math.max(1, heroPrints) * perPrint : 0;
   const heroArt = hero
     ? { slug: hero.slug!, title: hero.title, imageUrl: hero.imageUrl, sensitive: hero.sensitive, artist: { name: displayName(hero.artist), slug: hero.artist.slug } }
     : null;

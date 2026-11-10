@@ -42,8 +42,7 @@ function printedText(c: CodeRow) {
 export default async function CodesPage({ searchParams }: { searchParams: { show?: string } }) {
   const artist = await requireArtist("/studio/codes");
   const now = new Date();
-  const codes = await getCodes(artist.id);
-  const [places, partners, labels] = await Promise.all([placeOptions(artist.id), partnerChoices(artist.id), latestLabels(artist.id)]);
+  const [codes, places, partners, labels] = await Promise.all([getCodes(artist.id), placeOptions(artist.id), partnerChoices(artist.id), latestLabels(artist.id)]);
   const rows: CodeListRow[] = codes.map((c) => {
     const l = labels.get(c.id);
     return {

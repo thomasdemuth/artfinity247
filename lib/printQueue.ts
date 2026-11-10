@@ -1,6 +1,7 @@
 // Print queue (/studio/qr/queue): codes an artist wants printed, saved in the database so it follows them across
 // devices. Server only. Every item holds the piece's real short-link code (made when it's added, if needed), so what
 // prints is what scans. Mixed sheets come from generateMixedQrPdf (lib/generateQrPdf.ts).
+import { cache } from "react";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ensureArtworkCode, shortUrl } from "@/lib/shortlinks";
@@ -118,7 +119,7 @@ export function jobsByFormat(rows: QueueRow[], base: string) {
   return out;
 }
 
-export async function queueCount(artistId: string) {
+export const queueCount = cache(async (artistId: string) => {
   const r = await prisma.printQueueItem.aggregate({ where: { artistId }, _sum: { qty: true } }).catch(() => null);
   return r?._sum.qty ?? 0;
-}
+});
